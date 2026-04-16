@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intercambio Terapéutico · Área Sanitaria de Vigo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2efe9;--surface:#fff;--surface2:#eceae3;--border:#d8d4cb;
+  --text:#1c1916;--text2:#5a5550;--text3:#9a9590;
+  --navy:#1a3d5c;--navy2:#245880;--navy-light:#e8f0f8;
+  --teal:#0e7c6e;--teal-light:#e6f4f2;--teal-border:#7ec9c0;
+  --amber:#7a4500;--amber-bg:#fef5e7;--amber-border:#f0c070;
+  --red:#8b1a1a;--red-bg:#fdf0f0;--red-border:#e8a0a0;
+  --green:#1a4f30;--green-bg:#eaf4ee;--green-border:#7ec499;
+  --shadow:0 2px 16px rgba(26,23,20,.07);--shadow-lg:0 8px 40px rgba(26,23,20,.12);
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Figtree',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+header{background:var(--navy);color:#fff;padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(26,61,92,.3)}
+.hbrand{display:flex;align-items:center;gap:12px}
+.hicon{width:34px;height:34px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.htitle{font-family:'DM Serif Display',serif;font-size:1.15rem;letter-spacing:-.01em}
+.hsub{font-size:.68rem;opacity:.6;font-weight:300;letter-spacing:.06em;text-transform:uppercase}
+.hmeta{font-size:.7rem;opacity:.55;font-family:'DM Mono',monospace;text-align:right;line-height:1.5}
+main{max-width:860px;margin:0 auto;padding:2rem 1.5rem 5rem}
+.search-wrap{background:var(--surface);border-radius:var(--radius);padding:1.8rem;box-shadow:var(--shadow-lg);border:1px solid var(--border);margin-bottom:2rem}
+.search-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem}
+.input-row{display:flex;gap:10px;position:relative}
+.drug-input{flex:1;padding:13px 16px;border:2px solid var(--border);border-radius:10px;font-size:1rem;font-family:'Figtree',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+.drug-input:focus{border-color:var(--navy2);box-shadow:0 0 0 3px rgba(36,88,128,.1);background:#fff}
+.drug-input::placeholder{color:var(--text3)}
+.search-btn{padding:13px 24px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-family:'Figtree',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .2s,transform .1s;white-space:nowrap}
+.search-btn:hover{background:var(--navy2)}
+.search-btn:active{transform:scale(.98)}
+.ac-list{position:absolute;top:calc(100% + 4px);left:0;right:110px;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);max-height:280px;overflow-y:auto;z-index:300;display:none}
+.ac-list.open{display:block}
+.ac-item{padding:9px 14px;cursor:pointer;font-size:.88rem;border-bottom:1px solid var(--surface2);display:flex;align-items:center;gap:8px;transition:background .12s}
+.ac-item:last-child{border-bottom:none}
+.ac-item:hover,.ac-item.act{background:var(--navy-light)}
+.ac-item mark{background:#ffe082;border-radius:2px;padding:0 1px;font-style:normal}
+.ac-name{font-weight:500;flex:1}
+.ac-tag{font-size:.7rem;white-space:nowrap;padding:1px 7px;border-radius:8px;font-weight:600}
+.ac-tag-gft{background:var(--green-bg);color:var(--green)}
+.ac-tag-db{background:var(--surface2);color:var(--text2);font-family:'DM Mono',monospace}
+.ac-tag-custom{background:#fff8e1;color:#795548}
+#results{animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.gft-card{background:var(--green-bg);border:1.5px solid var(--green-border);border-radius:var(--radius);padding:1.4rem 1.6rem;margin-bottom:1rem}
+.gft-card-head{display:flex;align-items:flex-start;gap:14px}
+.gft-icon{font-size:1.8rem;flex-shrink:0;margin-top:2px}
+.gft-title{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--green);margin-bottom:.3rem}
+.gft-desc{font-size:.88rem;color:var(--teal);margin-bottom:.6rem}
+.gft-pres{margin-top:.5rem}
+.gft-pres-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--green);margin-bottom:.4rem}
+.gft-pres-list{display:flex;flex-wrap:wrap;gap:6px}
+.gft-pill{background:#fff;border:1px solid var(--green-border);color:var(--green);padding:3px 10px;border-radius:10px;font-size:.78rem;font-family:'DM Mono',monospace}
+.rcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1.2rem;box-shadow:var(--shadow)}
+.rcard-head{background:var(--navy);color:#fff;padding:1.2rem 1.6rem}
+.rcard-atc{font-family:'DM Mono',monospace;font-size:.68rem;opacity:.6;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.rcard-drug{font-family:'DM Serif Display',serif;font-size:1.5rem;letter-spacing:-.02em}
+.rcard-aliases{font-size:.78rem;opacity:.6;margin-top:.2rem;font-style:italic}
+.no-direct{background:#7a3b1e;color:#fde8dc;padding:.75rem 1.6rem;font-size:.82rem;font-weight:500;display:flex;align-items:center;gap:8px}
+.exchange-table{width:100%;border-collapse:collapse}
+.exchange-table thead tr{background:var(--surface2)}
+.exchange-table th{padding:9px 1.1rem;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);border-bottom:2px solid var(--border);text-align:left}
+.exchange-table th.th-alt{color:var(--teal);background:var(--teal-light)}
+.exchange-table th.th-arrow{width:36px;text-align:center;background:var(--surface2)}
+.exchange-table td{padding:12px 1.1rem;border-bottom:1px solid var(--surface2);vertical-align:top}
+.exchange-table tr:last-child td{border-bottom:none}
+.exchange-table tr:hover td{background:#fafaf8}
+.ind-badge{display:inline-block;background:var(--navy-light);color:var(--navy2);padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:600;margin-bottom:4px;letter-spacing:.02em}
+.src-drug{font-weight:600;font-size:.92rem;color:var(--text)}
+.src-dose{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--text2);margin-top:2px}
+.via-pill{display:inline-block;background:var(--surface2);color:var(--text2);padding:1px 7px;border-radius:8px;font-size:.68rem;font-weight:500;margin-top:3px}
+.arrow-col{text-align:center;color:var(--navy2);font-size:1.1rem;vertical-align:middle;padding:12px 4px}
+.alt-drug{font-weight:700;font-size:.92rem;color:var(--teal)}
+.alt-dose{font-family:'DM Mono',monospace;font-size:.85rem;color:var(--navy2);margin-top:3px;font-weight:500}
+.alt-via{display:inline-block;background:var(--teal-light);color:var(--teal);padding:1px 7px;border-radius:8px;font-size:.68rem;font-weight:600;margin-top:3px}
+.alt-note{font-size:.76rem;color:var(--text2);margin-top:4px;font-style:italic}
+.multi-alt+.multi-alt{border-top:1px dashed var(--teal-border);padding-top:7px;margin-top:7px}
+.notes-section{background:var(--amber-bg);border-top:1px solid var(--amber-border);padding:11px 1.6rem;font-size:.81rem;color:var(--amber);display:flex;gap:10px;align-items:flex-start}
+.notes-section .ni{font-size:14px;flex-shrink:0;margin-top:2px}
+.not-found{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;text-align:center}
+.not-found .nfi{font-size:2.5rem;margin-bottom:.8rem;opacity:.4}
+.not-found h3{font-family:'DM Serif Display',serif;font-size:1.25rem;margin-bottom:.4rem}
+.not-found p{font-size:.88rem;color:var(--text2);max-width:420px;margin:0 auto}
+.mgmt{margin-top:2.5rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.mgmt-head{background:var(--surface2);padding:.9rem 1.4rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.mgmt-title{font-weight:600;font-size:.9rem;display:flex;align-items:center;gap:8px}
+.mgmt-body{padding:1.5rem;display:none}
+.mgmt-body.open{display:block}
+.fg{display:grid;gap:10px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:580px){.fg2{grid-template-columns:1fr}}
+.fl{font-size:.72rem;font-weight:700;color:var(--text2);letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
+.fi,.fta{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Figtree',sans-serif;font-size:.9rem;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s}
+.fi:focus,.fta:focus{border-color:var(--navy2);background:#fff}
+.fta{min-height:60px;resize:vertical}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:.5rem}
+.btn{padding:9px 18px;border:none;border-radius:8px;font-family:'Figtree',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .2s}
+.btn-primary{background:var(--navy);color:#fff}.btn-primary:hover{background:var(--navy2)}
+.btn-excel{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}.btn-excel:hover{background:#d4edda}
+.btn-export{background:var(--navy-light);color:var(--navy);border:1px solid #c8d8e8}.btn-export:hover{background:#d8e8f4}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}.btn-danger:hover{background:#fae0e0}
+.divider{border:none;border-top:1px solid var(--border);margin:1.2rem 0}
+.ce-list{margin-top:1rem;max-height:260px;overflow-y:auto}
+.ce-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:8px;margin-bottom:5px;font-size:.82rem}
+.ce-name{font-weight:600;flex:1}.ce-alt{color:var(--text2);font-size:.78rem}.ce-date{color:var(--text3);font-family:'DM Mono',monospace;font-size:.7rem;white-space:nowrap}
+.ce-del{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);border-radius:5px;padding:2px 8px;font-size:.75rem;cursor:pointer;font-family:'Figtree',sans-serif;font-weight:600}
+.toast{position:fixed;bottom:1.8rem;right:1.8rem;background:var(--navy);color:#fff;padding:11px 18px;border-radius:10px;font-size:.88rem;box-shadow:var(--shadow-lg);z-index:9999;display:none;animation:slideUp .25s ease}
+.toast.show{display:block}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+footer{text-align:center;padding:1.5rem;font-size:.7rem;color:var(--text3);border-top:1px solid var(--border);margin-top:3rem;font-family:'DM Mono',monospace;line-height:1.8}
+</style>
+</head>
+<body>
+<header>
+  <div class="hbrand">
+    <div class="hicon">⚕</div>
+    <div><div class="htitle">Intercambio Terapéutico</div><div class="hsub">Área Sanitaria de Vigo</div></div>
+  </div>
+  <div class="hmeta">Ed. 02 · Feb 2023<br>C. Farmacia y Terapéutica</div>
+</header>
+<main>
+  <div class="search-wrap">
+    <div class="search-label">🔍 Consulta de intercambio terapéutico</div>
+    <div style="position:relative">
+      <div class="input-row">
+        <input type="text" id="drugInput" class="drug-input"
+          placeholder="Principio activo o nombre comercial… (ej: Ramipril, Targin, Symbicort, Ferbisol)"
+          autocomplete="off" spellcheck="false">
+        <button class="search-btn" onclick="doSearch()">Buscar →</button>
+      </div>
+      <div class="ac-list" id="acList"></div>
+    </div>
+  </div>
+  <div id="results"></div>
+  <div class="mgmt">
+    <div class="mgmt-head" onclick="toggleMgmt()">
+      <div class="mgmt-title">⚙️ Gestión de la base de datos
+        <span style="background:var(--surface);color:var(--text2);padding:2px 9px;border-radius:10px;font-size:.72rem;font-weight:500;border:1px solid var(--border)">Añadir · Exportar</span>
+      </div>
+      <span id="mgmtChev" style="color:var(--text3)">▼</span>
+    </div>
+    <div class="mgmt-body" id="mgmtBody">
+      <p style="font-size:.82rem;color:var(--text2);margin-bottom:1.2rem">Añade nuevas entradas de intercambio. Exporta el HTML actualizado para GitHub o un CSV para Excel con toda la base de datos.</p>
+      <div class="fg">
+        <div class="fg2">
+          <div><div class="fl">Medicamento NO incluido en GFT</div><input id="nDrug" class="fi" placeholder="Ej: Carvedilol 25 mg/24h oral"></div>
+          <div><div class="fl">Código ATC / Grupo terapéutico</div><input id="nAtc" class="fi" placeholder="Ej: C07AG · Betabloqueantes"></div>
+        </div>
+        <div class="fg2">
+          <div><div class="fl">Dosis origen</div><input id="nDoseSrc" class="fi" placeholder="Ej: 25 mg / 12h"></div>
+          <div><div class="fl">Alternativa GFT (nombre + dosis)</div><input id="nAlt" class="fi" placeholder="Ej: Bisoprolol 12,5 mg / 12h oral"></div>
+        </div>
+        <div><div class="fl">Observaciones / excepciones clínicas</div><textarea id="nObs" class="fta" placeholder="Ej: No intercambiar en ICC descompensada."></textarea></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="addEntry()">+ Añadir entrada</button>
+          <button class="btn btn-export" onclick="exportHTML()">⬇ Exportar HTML</button>
+          <button class="btn btn-excel" onclick="exportCSV()">📊 Exportar CSV/Excel</button>
+          <button class="btn btn-danger" onclick="clearAll()">Borrar entradas manuales</button>
+        </div>
+      </div>
+      <hr class="divider">
+      <div style="font-size:.8rem;font-weight:600;color:var(--text2);margin-bottom:.6rem">Entradas añadidas manualmente</div>
+      <div class="ce-list" id="ceList"></div>
+    </div>
+  </div>
+</main>
+<footer>Guía de Intercambio Terapéutico · Área Sanitaria de Vigo · Ed. 02 · 09/02/2023<br>Uso exclusivo para profesionales sanitarios del Área Sanitaria de Vigo</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// BASE DE DATOS  —  Guía IT Área Sanitaria de Vigo Ed.02 · 09/02/2023
+// ═══════════════════════════════════════════════════════════════════════
+// Cada entrada tiene:
+//   names[]   — nombres de búsqueda (normalizados sin tildes internamente)
+//   atc       — código ATC
+//   grupo     — grupo terapéutico
+//   noDirecta — true: no sustitución directa por Farmacia
+//   notes     — texto de notas/subíndices del pie de tabla
+//   entries[] — filas: { indicacion?, srcDrug, srcDose, via?, alts[{name,dose,via?,note?}] }
+// ═══════════════════════════════════════════════════════════════════════
+
+const GFT_DATE = "09/02/2023";
+
+// ── MEDICAMENTOS INCLUIDOS EN GFT (búsqueda positiva) ──────────────────
+// presentaciones[] = textos de presentaciones disponibles
+const GFT_INCLUDED = [
+  // A
+  {names:["clorhexidina"], grupo:"A01AB – Antiinfecciosos oral-local", presentaciones:["Clorhexidina 12 ml / 6-12h enjuague bucal"]},
+  {names:["almagato"], grupo:"A02AD – Antiácidos", presentaciones:["Almagato oral 1 sobre 1,5 g / 8h"]},
+  {names:["omeprazol","omeprazol 20mg","omeprazol 40mg"], grupo:"A02BC – IBP", presentaciones:["Omeprazol 20 mg cáps","Omeprazol 40 mg cáps","Omeprazol 10 mg/vial iv"]},
+  {names:["lansoprazol flas","lansoprazol 30mg bucodispersable"], grupo:"A02BC – IBP (SNG)", presentaciones:["Lansoprazol FLAS 30 mg comp. bucodispersable (para SNG o problemas de deglución)"]},
+  {names:["sucralfato","sucralfato 1g"], grupo:"A02BX – Úlcera péptica", presentaciones:["Sucralfato 1 g / 4 veces al día oral"]},
+  {names:["butilescopolamina","buscapina","butilescopolamina 10mg"], grupo:"A03A – Antiespasmódicos", presentaciones:["Butilescopolamina oral 10 mg / 6-8h","Butilescopolamina iv 20 mg / 8h (baja absorción oral)"]},
+  {names:["mebeverina","mebeverina 135mg","duspatalin"], grupo:"A03A – Antiespasmódicos", presentaciones:["Mebeverina oral 135 mg / 8h"]},
+  {names:["metoclopramida","metoclopramida 10mg","primperan"], grupo:"A03FA – Procinéticos", presentaciones:["Metoclopramida oral/iv 10 mg / 8h"]},
+  {names:["domperidona","domperidona 10mg","motilium"], grupo:"A03FA – Procinéticos (Parkinson)", presentaciones:["Domperidona oral 10 mg / 8h (usar en Parkinson)"]},
+  {names:["ondansetrón","ondansetron","zofran","ondansetrón 8mg"], grupo:"A04AA – Antieméticos 5-HT3", presentaciones:["Ondansetrón 8 mg / 12h oral/iv (post QT o RT)","Ondansetrón 4 mg iv dosis única (QX)","Ondansetrón 16 mg 1h pre-QX + 8 mg/8h post-QX (2 dosis)"]},
+  {names:["palonosetrón","palonosetron","aloxi"], grupo:"A04AA – Antieméticos 5-HT3 (restringido)", presentaciones:["Palonosetrón 250 mcg dosis única pre-QT iv (uso restringido según protocolo)"]},
+  {names:["budesonida rectal","budesonida enema","entocort enema"], grupo:"A07EA – Antiinflamatorios intestinales", presentaciones:["Budesonida rectal 1 enema / 24h"]},
+  {names:["gliclazida","diamicron","gliclazida 30mg"], grupo:"A10BB – Antidiabéticos sulfonilúreas", presentaciones:["Gliclazida oral (Diamicron®) 30 mg / 24h ¹ (sin ajuste en IR leve-moderada; IR severa → insulina)"]},
+  {names:["glimepirida","glimepirida 2mg","amaryl"], grupo:"A10BB – Antidiabéticos sulfonilúreas", presentaciones:["Glimepirida oral 2 mg / 24h ² (ancianos: iniciar 1 mg/día; no usar si ClCr < 30 ml/min)"]},
+  {names:["metformina","metformina 850mg","metformina oral"], grupo:"A10BA – Antidiabéticos biguanidas", presentaciones:["Metformina 850 mg oral"]},
+  {names:["sitagliptina","januvia","xelevia","sitagliptina 100mg","sitagliptina 50mg","sitagliptina 25mg"], grupo:"A10BH – Antidiabéticos iDPP-4", presentaciones:["Sitagliptina oral 100 mg / 24h (función renal normal)","Sitagliptina oral 50 mg / 24h (IR moderada ClCr 30-50 ml/min)","Sitagliptina oral 25 mg / 24h (IR grave ClCr <30 ml/min o diálisis)"]},
+  {names:["dapagliflozina","dapaglifozina","forxiga","dapagliflozina 10mg"], grupo:"A10BK – Antidiabéticos iSGLT-2", presentaciones:["Dapagliflozina oral 10 mg / día (DM2 e Insuficiencia cardiaca)"]},
+  {names:["insulina"], grupo:"A10A – Insulinas", presentaciones:["Consultar con Farmacia la presentación disponible según pauta"]},
+  {names:["calcitriol","rocaltrol","rocaltrol 0.25mcg","calcitriol 0.25mcg"], grupo:"A11CC – Vitamina D", presentaciones:["Calcitriol (Rocaltrol®) 0,25 mcg cáps"]},
+  {names:["vitamina d3 gotas","colecalciferol gotas","vitamina d3 2000ui"], grupo:"A11CC – Vitamina D", presentaciones:["Vitamina D3 gotas 2000 UI/ml®"]},
+  {names:["hidroferol","calcifediol amp","hidroferol 266mcg"], grupo:"A11CC – Vitamina D", presentaciones:["Hidroferol® 266 mcg amp. bebible"]},
+  {names:["paricalcitol","zemplar","paricalcitol 2mcg"], grupo:"A11CC – Vitamina D", presentaciones:["Paricalcitol 2 mcg/1 ml amp"]},
+  {names:["tiamina","vitamina b1","tiamina 100mg","tiamina 300mg"], grupo:"A11DA – Vitamina B1", presentaciones:["Tiamina 300 mg oral / 24h","Tiamina 100 mg parenteral (iv/im) 50-200 mg / 24h (urgencias: hasta 1000 mg iv lento primeras 12h, 3 días)"]},
+  // Calcio - presentaciones GFT
+  {names:["ostine","calcio vitamina d3 ostine"], grupo:"A12A – Suplementos calcio+vit D", presentaciones:["Ostine® comp: 500 mg Calcio + 400 UI Vit D3"]},
+  {names:["calcium sandoz d","calcium sandoz","calcium sandoz 500mg"], grupo:"A12A – Suplementos calcio+vit D", presentaciones:["Calcium Sandoz D® comp: 500 mg Calcio + 400 UI Vit D3 / 500 mg Calcio + 0,2 ml Vitamina D3® gotas 400 UI/0,2 ml"]},
+  {names:["mastical d","mastical","mastical 500mg"], grupo:"A12A – Suplementos calcio+vit D", presentaciones:["Mastical D® comp: 500 mg Calcio + 400 UI Vit D3 / 500 mg Calcio + 0,2 ml Vitamina D3® gotas 400 UI/0,2 ml"]},
+  {names:["potasion","boi-k","potasio cloruro"], grupo:"A12BA – Suplementos potasio", presentaciones:["Potasion® cáps: Potasio cloruro 8 mEq/cáps (5-12 cáps/día 2-3 tomas)","Boi-K® comp: Potasio ascorbato 10 mEq/comp (2-6 comp/día 2-3 tomas)"]},
+  // Hierro
+  {names:["ferrosanol","ferrosanol cáps","glicina sulfato ferroso"], grupo:"B03AA – Hierro oral", presentaciones:["Ferrosanol® cáps: Glicina sulfato ferroso 567 mg = 100 mg Fe(II) / cáps"]},
+  {names:["ferplex","ferplex vial","proteinsuccinilato de hierro"], grupo:"B03AB – Hierro oral", presentaciones:["Ferplex® vial bebible: Proteinsuccinilato de hierro 800 mg = 40 mg Fe(III) / vial"]},
+  // Hierro iv
+  {names:["feriv","hierro hidróxido sacarosa","venofer"], grupo:"B03AC – Hierro intravenoso", presentaciones:["Feriv® ampollas 100 mg (Hierro hidróxido sacarosa) iv"]},
+  {names:["ferinject","carboximaltosa férrica"], grupo:"B03AC – Hierro intravenoso (dictamen CACFT)", presentaciones:["Ferinject® ampollas 500 mg (Carboximaltosa férrica) iv. Ver Dictamen CACFT SERGAS."]},
+  // B
+  {names:["bemiparina","hibor","hibor 2500","hibor 3500"], grupo:"B01AB – HBPM", presentaciones:["Hibor® 2500 UI sc","Hibor® 3500 UI sc"]},
+  {names:["enoxaparina","clexane","enoxaparina 20mg","enoxaparina 40mg","enoxaparina 60mg","enoxaparina 80mg","enoxaparina 100mg"], grupo:"B01AB – HBPM", presentaciones:["Enoxaparina 20 mg sc","Enoxaparina 40 mg sc","Enoxaparina 60 mg sc","Enoxaparina 80 mg sc","Enoxaparina 100 mg sc"]},
+  {names:["ácido acetilsalicílico","aas","aspirina","ácido acetilsalicílico 100mg","ácido acetilsalicílico 300mg"], grupo:"B01AC – Antiagregantes", presentaciones:["Ácido acetilsalicílico 100 mg / 24h oral","Ácido acetilsalicílico 300 mg / 24h oral"]},
+  {names:["triflusal","disgren","triflusal 300mg","triflusal 600mg"], grupo:"B01AC – Antiagregantes", presentaciones:["Triflusal oral 300 mg / 24h","Triflusal oral 600 mg / 24h (confirmar alergias; no intercambiar si venía de domicilio)"]},
+  {names:["ácido tranexámico","acido tranexamico","amchafibrin"], grupo:"B02AA – Antifibrinolíticos", presentaciones:["Ácido tranexámico 1 g / 8h iv","Ácido tranexámico 1 g / 6-8h oral"]},
+  // C
+  {names:["isosorbida mononitrato","isosorbida mononitrato 50mg","isosorbida mononitrato 20mg","monoket","ismo"], grupo:"C01DA – Nitratos", presentaciones:["Isosorbida mononitrato oral 20 mg / 8-12h","Isosorbida mononitrato oral 40 mg / 8-12h","Isosorbida mononitrato retard oral 50 mg / 24h"]},
+  {names:["furosemida","furosemida 40mg","seguril"], grupo:"C03CA – Diuréticos del asa", presentaciones:["Furosemida oral 40 mg / 24h"]},
+  {names:["espironolactona","espironolactona 25mg","aldactone"], grupo:"C03DA – Diuréticos ahorradores K", presentaciones:["Espironolactona oral 25 mg"]},
+  {names:["bisoprolol","bisoprolol 2.5mg","bisoprolol 5mg","emconcor","concor"], grupo:"C07AB – Betabloqueantes selectivos", presentaciones:["Bisoprolol oral 2,5 mg comp","Bisoprolol oral 5 mg comp"]},
+  {names:["metoprolol","metoprolol 100mg","lopresor"], grupo:"C07AB – Betabloqueantes selectivos", presentaciones:["Metoprolol 100 mg comp oral"]},
+  {names:["atenolol","atenolol 50mg","tenormin"], grupo:"C07AB – Betabloqueantes selectivos", presentaciones:["Atenolol oral 50 mg comp","Atenolol iv 5 mg amp"]},
+  {names:["esmolol","brevibloc","esmolol 100mg","esmolol 2500mg"], grupo:"C07AB – Betabloqueantes selectivos iv", presentaciones:["Esmolol 100 mg/vial iv","Esmolol 2500 mg/bolsa iv"]},
+  {names:["amlodipino","amlodipino 5mg","amlodipino 10mg","norvasc"], grupo:"C08CA – Calcioantagonistas DHP", presentaciones:["Amlodipino 5 mg comp","Amlodipino 10 mg comp"]},
+  {names:["nifedipino","nifedipino 20mg","nifedipino 30mg","adalat"], grupo:"C08CA – Calcioantagonistas DHP", presentaciones:["Nifedipino 20 mg retard comp","Nifedipino 30 mg Oros comp"]},
+  {names:["nimodipino","nimodipino 30mg","nimotop"], grupo:"C08CA – Calcioantagonistas DHP", presentaciones:["Nimodipino 30 mg comp","Nimodipino 10 mg/frasco perfusión iv"]},
+  {names:["verapamilo","manidon","verapamilo 80mg","verapamilo 120mg","verapamilo 180mg"], grupo:"C08DA – Calcioantagonistas no DHP", presentaciones:["Verapamilo (Manidon®) 80 mg comp","Verapamilo 120 mg comp lib. retardada","Verapamilo 180 mg comp lib. retardada","Verapamilo 5 mg amp iv"]},
+  {names:["diltiazem","dinisor","lacerol","diltiazem 60mg","diltiazem 120mg","diltiazem 180mg"], grupo:"C08DB – Calcioantagonistas no DHP", presentaciones:["Diltiazem (Dinisor®/Lacerol®) 60 mg comp","Diltiazem 120 mg comp lib. retardada","Diltiazem 180 mg comp lib. retardada"]},
+  {names:["captopril","captopril 25mg","capoten"], grupo:"C09AA – IECAs", presentaciones:["Captopril 25 mg comp oral (HTA: inicio 50 mg/día 1-2 tomas; máx 450 mg/día; ajustar en IR ClCr<40 ml/min)"]},
+  {names:["enalapril","enalapril 5mg","enalapril 20mg","renitec"], grupo:"C09AA – IECAs", presentaciones:["Enalapril 5 mg comp oral","Enalapril 20 mg comp oral (HTA: inicio 10-20 mg/día; mant 20 mg/día; máx 40 mg/día; ajustar en IR ClCr<80 ml/min)"]},
+  {names:["losartán","losartan","losartán 50mg","cozaar"], grupo:"C09CA – ARA-II", presentaciones:["Losartán 50 mg comp oral (dosis máx 100 mg/24h)"]},
+  {names:["candesartán","candesartan","atacand","candesartán 8mg","candesartán 16mg","candesartan 8mg","candesartan 16mg"], grupo:"C09CA – ARA-II", presentaciones:["Candesartán oral 4 mg","Candesartán oral 8 mg","Candesartán oral 16 mg (dosis máx 32 mg/24h)"]},
+  {names:["losartán hidroclorotiazida","losartan hidroclorotiazida","losartán/hidroclorotiazida","losartan/hidroclorotiazida","hyzaar","losartán 50mg hidroclorotiazida 12.5mg"], grupo:"C09DA – ARA-II + diurético", presentaciones:["Losartán/Hidroclorotiazida 50/12,5 mg comp","Losartán 50 mg + Hidroclorotiazida 50 mg (Hidrosaluretil®) por separado"]},
+  {names:["hidroclorotiazida","hidroclorotiazida 50mg","hidrosaluretil"], grupo:"C03AA – Diuréticos tiazídicos", presentaciones:["Hidroclorotiazida 50 mg comp (Hidrosaluretil®)"]},
+  {names:["simvastatina","simvastatina 10mg","simvastatina 20mg","simvastatina 40mg","zocor"], grupo:"C10AA – Estatinas", presentaciones:["Simvastatina 10 mg oral","Simvastatina 20 mg oral","Simvastatina 40 mg oral (si ClCr<30 ml/min: máx 10 mg/24h)"]},
+  {names:["atorvastatina","atorvastatina 10mg","atorvastatina 20mg","atorvastatina 40mg","atorvastatina 80mg","lipitor","cardyl"], grupo:"C10AA – Estatinas", presentaciones:["Atorvastatina 10 mg oral (mínima disponible en Farmacia)","Atorvastatina 20 mg oral","Atorvastatina 40 mg oral","Atorvastatina 80 mg oral"]},
+  {names:["pravastatina","pravastatina 10mg","pravastatina 20mg","pravastatina 40mg","lipostat"], grupo:"C10AA – Estatinas (uso restringido)", presentaciones:["Pravastatina 10 mg oral","Pravastatina 20 mg oral","Pravastatina 40 mg oral — RESTRINGIDA a pacientes con posaconazol, inhibidores de la proteasa, ciclosporina, claritromicina o eritromicina. En ancianos, IR e IH: inicio 10 mg/24h"]},
+  {names:["fenofibrato","fenofibrato 160mg","secalip","lipanthyl"], grupo:"C10AB – Fibratos", presentaciones:["Fenofibrato oral 160 mg / 24h comp (todas las presentaciones son intercambiables entre sí: 100 mg/8h cáps, 160 mg/24h comp, 200 mg/24h micronizado, 250 mg/24h retard, 145 mg/24h comp recubiertos)"]},
+  {names:["colestipol","colestipol 5g","colestid"], grupo:"C10AC – Secuestrantes sales biliares", presentaciones:["Colestipol oral 5 g (1 sobre) / 12-24h (máx 30 g/día en 3 tomas)"]},
+  // G
+  {names:["clotrimazol vaginal","clotrimazol 500mg vaginal","canesten vaginal"], grupo:"G01AF – Antifúngicos genitourinarios", presentaciones:["Clotrimazol 500 mg comp. vaginal – dosis única","Clotrimazol 20 mg/g crema vaginal","Sertaconazol 20 mg/g crema vaginal"]},
+  {names:["cabergolina","cabergolina 0.5mg","dostinex"], grupo:"G02CB – Inhibidores prolactina", presentaciones:["Cabergolina oral 0,5 mg","Cabergolina oral 1 mg dosis única"]},
+  {names:["tolterodina","tolterodina 4mg","detrusitol"], grupo:"G04BD – Antiespasmódicos urinarios", presentaciones:["Tolterodina oral 4 mg / 24h (lib. modificada) – en SNG usar Oxibutinina 5 mg/8h"]},
+  {names:["oxibutinina","oxibutinina 5mg","ditropan"], grupo:"G04BD – Antiespasmódicos urinarios", presentaciones:["Oxibutinina oral 5 mg / 8h"]},
+  {names:["tamsulosina","tamsulosina 0.4mg","urolosin","omnic"], grupo:"G04CA – Alfa-bloqueantes urinarios", presentaciones:["Tamsulosina oral 0,4 mg / 24h (máx 0,8 mg/24h)"]},
+  {names:["doxazosina","doxazosina 4mg","cardura"], grupo:"G04CA – Alfa-bloqueantes urinarios", presentaciones:["Doxazosina oral 4 mg / 24h (lib. modificada; en SNG: doxazosina lib. normal 2 mg/12h; máx 8 mg/24h)"]},
+  {names:["finasterida","finasterida 5mg","proscar"], grupo:"G04CB – Inhibidores 5-alfa reductasa", presentaciones:["Finasterida oral 5 mg / 24h"]},
+  // H
+  {names:["tiamazol","tiamazol 5mg","tirodril"], grupo:"H03BB – Antitiroideos", presentaciones:["Tiamazol oral 5 mg (dosis usual)"]},
+  // J
+  {names:["ampicilina inyectable","ampicilina 1g","gobemicina"], grupo:"J01CA – Penicilinas espectro amplio iv", presentaciones:["Ampicilina 1 g inyectable (Gobemicina®)"]},
+  {names:["amoxicilina","amoxicilina 500mg","augmentine solo","amoxicilina 250mg susp"], grupo:"J01CA – Penicilinas espectro amplio oral", presentaciones:["Amoxicilina 500 mg cáps oral","Amoxicilina 250 mg/5 ml susp. oral"]},
+  {names:["cefazolina","cefazolina 1g"], grupo:"J01D – Cefalosporinas", presentaciones:["Cefazolina 1 g vial iv"]},
+  {names:["cefoxitina","cefoxitina 1g"], grupo:"J01D – Cefalosporinas", presentaciones:["Cefoxitina 1 g inyectable"]},
+  {names:["cefuroxima","cefuroxima 750mg","cefuroxima 500mg"], grupo:"J01D – Cefalosporinas", presentaciones:["Cefuroxima 750 mg vial iv","Cefuroxima 500 mg comp oral","Cefuroxima 250 mg/5 ml granulado susp. oral (restringido a pediatría)"]},
+  {names:["cefotaxima","cefotaxima 1g","claforan"], grupo:"J01D – Cefalosporinas", presentaciones:["Cefotaxima 1 g inyectable"]},
+  {names:["ceftazidima","ceftazidima 1g","ceftazidima 2g","fortum"], grupo:"J01D – Cefalosporinas", presentaciones:["Ceftazidima 1 g vial","Ceftazidima 2 g vial"]},
+  {names:["ceftriaxona","ceftriaxona 1g","ceftriaxona 500mg","rocefalin"], grupo:"J01D – Cefalosporinas", presentaciones:["Ceftriaxona 500 mg vial im","Ceftriaxona 1 g vial im","Ceftriaxona 1 g vial iv"]},
+  {names:["cefixima","cefixima 400mg","cefixima 20mg susp"], grupo:"J01D – Cefalosporinas", presentaciones:["Cefixima 400 mg cáps","Cefixima 20 mg/ml susp. oral (restringido a pediatría)"]},
+  {names:["cefepima","cefepima 1g","cefepima 2g","maxipime"], grupo:"J01D – Cefalosporinas", presentaciones:["Cefepima 1 g vial","Cefepima 2 g vial"]},
+  {names:["aztreonam","aztreonam 1g","azactam"], grupo:"J01D – Monobactámicos", presentaciones:["Aztreonam 1 g vial"]},
+  {names:["meropenem","meropenem 1g","meropenem 500mg","meronem"], grupo:"J01D – Carbapenems", presentaciones:["Meropenem 1 g vial","Meropenem 500 mg vial"]},
+  {names:["ertapenem","ertapenem 1g","invanz"], grupo:"J01D – Carbapenems", presentaciones:["Ertapenem 1 g vial"]},
+  {names:["imipenem cilastatina","imipenem/cilastatina","tienam"], grupo:"J01D – Carbapenems", presentaciones:["Imipenem/Cilastatina 500/500 mg vial"]},
+  {names:["ceftolozano tazobactam","ceftolozano/tazobactam","zerbaxa"], grupo:"J01D – Cefalosporinas+β-lactamasas", presentaciones:["Ceftolozano/Tazobactam 1/0,5 g vial"]},
+  {names:["azitromicina","azitromicina 500mg","zithromax"], grupo:"J01FA – Macrólidos", presentaciones:["Azitromicina 500 mg iv (infusión 1 mg/ml 3h ó 2 mg/ml 1h; NO bolus ni im)"]},
+  {names:["eritromicina","eritromicina vial"], grupo:"J01FA – Macrólidos (uso específico)", presentaciones:["Eritromicina vial iv (uso como procinético y profilaxis intraparto Streptococcus en alérgicas a penicilina)"]},
+  {names:["ciprofloxacino","ciprofloxacino 250mg","ciprofloxacino 500mg","ciprofloxacino 750mg","baycip","cipro"], grupo:"J01MA – Quinolonas", presentaciones:["Ciprofloxacino oral 250 mg / 12h","Ciprofloxacino oral 500 mg / 12h","Ciprofloxacino oral 750 mg / 12h"]},
+  {names:["levofloxacino","levofloxacino 500mg","tavanic"], grupo:"J01MA – Quinolonas", presentaciones:["Levofloxacino oral 500 mg / 24h"]},
+  {names:["norfloxacino oral","noroxin","norfloxacino 400mg"], grupo:"J01MA – Quinolonas (uso ITU)", presentaciones:["Norfloxacino oral 400 mg / 12h (uso restringido a ITU)"]},
+  // M
+  {names:["diclofenaco","diclofenaco 50mg","voltaren","diclofenaco oral"], grupo:"M01AB – AINEs ácido acético", presentaciones:["Diclofenaco oral 50 mg / 8-12h"]},
+  {names:["ibuprofeno","ibuprofeno 600mg","neobrufen"], grupo:"M01AE – AINEs ácido propiónico", presentaciones:["Ibuprofeno oral 600 mg / 8h"]},
+  {names:["dexketoprofeno","dexketoprofeno 50mg","enantyum"], grupo:"M01AE – AINEs ácido propiónico iv", presentaciones:["Dexketoprofeno iv/im 50 mg / 8-12h (máx 48h)"]},
+  {names:["colchicina dicicloverina","colchicina/dicicloverina","colchimax"], grupo:"M04AC – Antigotosos", presentaciones:["Colchicina/Dicicloverina oral 0,5/5 mg"]},
+  // N
+  {names:["morfina","morfina 10mg","morfina 30mg","mst","morfina 4%","morfina 1%","morfina 2%"], grupo:"N02A – Opioides", presentaciones:["Morfina 4% amp 10 ml","Morfina 2% amp 1 ml","Morfina 1% amp 1 ml","Morfina 10 mg comp oral","Morfina 10 mg comp lib. retardada (MST®)","Morfina 30 mg comp lib. retardada (MST®)"]},
+  {names:["oxicodona","oxicodona 5mg","oxicodona 10mg","oxicodona 20mg","oxycontin"], grupo:"N02A – Opioides", presentaciones:["Oxicodona 5 mg comp lib. modificada","Oxicodona 10 mg comp lib. modificada","Oxicodona 20 mg comp lib. modificada"]},
+  {names:["petidina","petidina 100mg","dolantina"], grupo:"N02A – Opioides", presentaciones:["Petidina 100 mg amp"]},
+  {names:["fentanilo transdérmico","fentanilo parche","fentanilo 12mcg","fentanilo 25mcg","fentanilo 50mcg","durogesic"], grupo:"N02A – Opioides transdérmicos", presentaciones:["Fentanilo 12 mcg/h parche","Fentanilo 25 mcg/h parche","Fentanilo 50 mcg/h parche"]},
+  {names:["fentanilo bucal","fentanilo 200mcg","fentanilo 400mcg","fentanilo 600mcg","actiq"], grupo:"N02A – Opioides bucales", presentaciones:["Fentanilo 200 mcg comp con aplicador bucofaríngeo","Fentanilo 400 mcg comp con aplicador bucofaríngeo","Fentanilo 600 mcg comp con aplicador bucofaríngeo"]},
+  {names:["tramadol","tramadol 100mg","tramadol 50mg","adolonta"], grupo:"N02A – Opioides tramadol", presentaciones:["Tramadol 100 mg amp","Tramadol 50 mg comp"]},
+  {names:["remifentanilo","remifentanilo vial","ultiva"], grupo:"N02A – Opioides iv anestesia", presentaciones:["Remifentanilo vial iv"]},
+  {names:["metadona","metadona vial"], grupo:"N02A – Opioides", presentaciones:["Metadona (disponible; consultar con Farmacia)"]},
+  {names:["rasagilina","rasagilina 1mg","azilect"], grupo:"N04BD – Dopaminérgicos MAO-B", presentaciones:["Rasagilina oral 1 mg / 24h"]},
+  {names:["risperidona","risperidona 1mg","risperidona 2mg","risperdal"], grupo:"N05AX – Antipsicóticos", presentaciones:["Risperidona oral 1 mg / 24h","Risperidona oral 2 mg / 24h (pauta inicio: 2 mg día 1; 4 mg día 2; 6 mg día 3; IR/IH: 0,5 mg/12h; ancianos: 0,5 mg/12h)"]},
+  {names:["lormetazepam","lormetazepam 1mg","noctamid"], grupo:"N05CD – Hipnóticos BZD", presentaciones:["Lormetazepam oral 1 mg / 24h"]},
+  {names:["zolpidem","zolpidem 10mg","stilnox"], grupo:"N05CF – Hipnóticos Z", presentaciones:["Zolpidem oral 10 mg / 24h"]},
+  {names:["lorazepam","lorazepam 1mg","orfidal"], grupo:"N05BA – Ansiolíticos BZD", presentaciones:["Lorazepam oral 1 mg / 12h"]},
+  {names:["diazepam","diazepam 5mg","valium"], grupo:"N05BA – Ansiolíticos BZD", presentaciones:["Diazepam oral 5 mg / 8-12h"]},
+  {names:["clorazepato","clorazepato 5mg","clorazepato 10mg","clorazepato 15mg","tranxilium"], grupo:"N05BA – Ansiolíticos BZD", presentaciones:["Clorazepato oral 5 mg","Clorazepato oral 10 mg","Clorazepato oral 15 mg"]},
+  {names:["citalopram","citalopram 20mg","prisdal"], grupo:"N06AB – ISRS", presentaciones:["Citalopram oral 20 mg / 24h (máx 40 mg/24h; IH y ancianos: máx 20 mg/24h)"]},
+  // R
+  {names:["budesonida nasal","budesonida 64mcg","rhinocort"], grupo:"R01AD – Corticoides nasales", presentaciones:["Budesonida nasal 64 mcg/puls · 1 puls/12h cada fosa nasal"]},
+  {names:["acetilcisteína","acetilcisteina","acetilcisteína 600mg","fluimucil 600","hidonac"], grupo:"R05CB – Mucolíticos", presentaciones:["Acetilcisteína 300 mg amp iv (Hidonac®)","Acetilcisteína 600 mg sobres orales","Ambroxol 15 mg amp iv (Motosol®) — disponible en GFT","Mesna 200 mg amp — disponible en GFT"]},
+  {names:["ebastina","ebastina 10mg","ebastel"], grupo:"R06AX – Antihistamínicos sistémicos", presentaciones:["Ebastina oral 10 mg / 24h"]},
+  // Inhaladores GFT
+  {names:["salbutamol","ventolin","salbuair","salbutamol 100mcg"], grupo:"R03AC – Broncodilatadores SABA", presentaciones:["Salbutamol (Ventolin®) 100 mcg/inh aerosol + cámara","Salbuair® 2,5 mg amp nebulización","Ventolin® 4 mg comp","Ventolin® 0,5 mg/ml sol inyectable","Combiprasal® (Salbutamol/Ipratropio) 2,5/0,5 mg — Ventolin sol 5mg/ml NO incluido; equivalencia: 1 ml Ventolin sol → 5 ml Salbuair®"]},
+  {names:["ipratropio","atroaldo","ipratropio 20mcg"], grupo:"R03BB – Broncodilatadores SAMA", presentaciones:["Ipratropio (Atroaldo®) 20 mcg/inh aerosol + cámara"]},
+  {names:["salmeterol","serevent","salmeterol 25mcg"], grupo:"R03AC – Broncodilatadores LABA", presentaciones:["Salmeterol (Serevent®) 25 mcg/inh aerosol + cámara","Salmeterol Accuhaler® 0,05 mg/alv polvo seco"]},
+  {names:["tiotropio","spiriva","tiotropio 2.5mcg","tiotropio 18mcg"], grupo:"R03BB – Broncodilatadores LAMA", presentaciones:["Tiotropio Respimat® 2,5 mcg/inh","Tiotropio Handihaler® 18 mcg/dosis polvo seco"]},
+  {names:["budesonida inhalada","budesonida dpi","budesonida turbuhaler","budesonida 200mcg","budesonida 400mcg"], grupo:"R03BA – Corticoides inhalados", presentaciones:["Budesonida DPI 200 mcg/inh (Budesonida Aldo-Union®) aerosol + cámara","Budesonida Turbuhaler® 400 mcg/dosis polvo seco"]},
+  {names:["salmeterol fluticasona","seretide","salmeterol/fluticasona 25/125","salmeterol/fluticasona 50/250"], grupo:"R03AK – Broncodilatador LABA + CI", presentaciones:["Salmeterol+Fluticasona (Seretide®) 25/125 mcg aerosol + cámara","Salmeterol+Fluticasona (Seretide Accuhaler®) 50/250 mcg/dosis polvo seco"]},
+  {names:["formoterol beclometasona","foster","formoterol/beclometasona 6/100"], grupo:"R03AK – Broncodilatador LABA + CI", presentaciones:["Formoterol+Beclometasona DPI (Foster®) 6/100 mcg polvo seco"]},
+  {names:["formoterol budesonida","symbicort","formoterol/budesonida 4.5/160"], grupo:"R03AK – Broncodilatador LABA + CI", presentaciones:["Formoterol+Budesonida (Symbicort®) 4,5/160 mcg/inh aerosol"]},
+  {names:["vilanterol fluticasona","relvar","relvar ellipta","vilanterol/fluticasona 22/92"], grupo:"R03AK – Broncodilatador LABA + CI", presentaciones:["Vilanterol+Fluticasona (Relvar Ellipta®) 22/92 mcg/dosis polvo seco"]},
+  {names:["tiotropio olodaterol","spiolto","spiolto respimat"], grupo:"R03AL – Broncodilatador LAMA + LABA", presentaciones:["Tiotropio+Olodaterol (Spiolto Respimat®) 2,5/2,5 mcg/inh"]},
+  {names:["glicopirronio indacaterol","ultibro","ultibro breezhaler"], grupo:"R03AL – Broncodilatador LAMA + LABA", presentaciones:["Glicopirronio+Indacaterol (Ultibro®) 43/85 mcg/dosis polvo seco"]},
+  {names:["beclometasona formoterol glicopirronio","trimbow","triple inhalador beclometasona"], grupo:"R03AL – Triple combinación inhalada", presentaciones:["Beclometasona 87 mcg / Formoterol 5 mcg / Glicopirronio 9 mcg aerosol"]},
+  {names:["fluticasona umeclidinio vilanterol","trelegy","trelegy ellipta"], grupo:"R03AL – Triple combinación inhalada", presentaciones:["Fluticasona 92 mcg / Umeclidinio 55 mcg / Vilanterol 22 mcg polvo para inhalación"]},
+  // S
+  {names:["ciprofloxacino oftálmico","ciprofloxacino 0.3% colirio"], grupo:"S01AA – Oftalmológicos antibióticos", presentaciones:["Ciprofloxacino oftálmico 0,3% colirio"]},
+  {names:["tobramicina oftálmica","tobramicina 0.3% colirio","tobrex"], grupo:"S01AA – Oftalmológicos antibióticos", presentaciones:["Tobramicina oftálmica 0,3% colirio"]},
+  {names:["dexametasona oftálmica","dexametasona colirio"], grupo:"S01AB – Oftalmológicos corticoides", presentaciones:["Dexametasona oftálmica colirio"]},
+  {names:["diclofenaco oftálmico","diclofenaco 0.1% colirio"], grupo:"S01BC – Oftalmológicos AINEs", presentaciones:["Diclofenaco oftálmico 0,1% colirio"]},
+  {names:["dexametasona tobramicina oftálmica","tobradex"], grupo:"S01CA – Oftalmológicos corticoide+antibiótico", presentaciones:["Dexametasona+Tobramicina oftálmica colirio","Dexametasona+Neomicina+Polimixina B (Maxitrol®) — también incluido"]},
+  {names:["brimonidina oftálmica","alphagan"], grupo:"S01EA – Antiglaucoma simpaticomiméticos", presentaciones:["Brimonidina oftálmica colirio"]},
+  {names:["dorzolamida oftálmica","trusopt"], grupo:"S01EC – Antiglaucoma inhib. anhidrasa", presentaciones:["Dorzolamida oftálmica 1 gota / 8h"]},
+  {names:["timolol oftálmico","timolol 0.5% colirio","timoftol"], grupo:"S01ED – Antiglaucoma betabloqueante", presentaciones:["Timolol 0,5% colirio oftálmico"]},
+  {names:["latanoprost","xalatan","latanoprost 1 gota"], grupo:"S01EE – Antiglaucoma prostaglandinas", presentaciones:["Latanoprost (Xalatan®) 1 gota / 24h"]},
+  {names:["tafluprost","saflutan"], grupo:"S01EE – Antiglaucoma prostaglandinas", presentaciones:["Tafluprost (Saflutan®) 1 gota / 24h"]},
+  {names:["combigan","timolol brimonidina"], grupo:"S01EX – Antiglaucoma combinaciones", presentaciones:["Combigan® (Timolol + Brimonidina) colirio"]},
+  {names:["cosopt","timolol dorzolamida"], grupo:"S01EX – Antiglaucoma combinaciones", presentaciones:["Cosopt® (Timolol + Dorzolamida) colirio"]},
+  {names:["xalacom","timolol latanoprost"], grupo:"S01EX – Antiglaucoma combinaciones", presentaciones:["Xalacom® (Timolol + Latanoprost) colirio"]},
+];
+
+// ── INTERCAMBIOS (medicamentos NO en GFT con su alternativa) ───────────
+const DB = [
+  // ══ GRUPO A ══
+  {id:"hexetidina",names:["hexetidina"],atc:"A01AB",grupo:"Antiinfecciosos oral-local",fecha:GFT_DATE,
+    entries:[{srcDrug:"Hexetidina",srcDose:"10 ml / 8h",via:"enjuague bucal",alts:[{name:"Clorhexidina",dose:"12 ml / 6-12h",via:"enjuague bucal"}]}]},
+  {id:"povidona_oral",names:["povidona iodada oral","betadine bucal"],atc:"A01AB",grupo:"Antiinfecciosos oral-local",fecha:GFT_DATE,
+    entries:[{srcDrug:"Povidona iodada",srcDose:"10 ml / 8-12h",via:"enjuague bucal",alts:[{name:"Clorhexidina",dose:"12 ml / 6-12h",via:"enjuague bucal"}]}]},
+  {id:"carbenoxolona",names:["carbenoxolona"],atc:"A01AB",grupo:"Antiinfecciosos oral-local",fecha:GFT_DATE,
+    entries:[{srcDrug:"Carbenoxolona",srcDose:"1 aplicación / 6h",via:"oral",alts:[{name:"Clorhexidina",dose:"12 ml / 6-12h",via:"enjuague bucal"}]}]},
+  {id:"algeldrato",names:["algeldrato","magnesio hidróxido combinado","aluminio hidróxido magnesio carbonato coprecipitado"],atc:"A02AD",grupo:"Antiácidos combinados",fecha:GFT_DATE,
+    entries:[{srcDrug:"Algeldrato/Mg-hidróxido/Al-hidróxido-Mg-carbonato coprecipitado",srcDose:"5-10 ml / 6h",via:"oral",alts:[{name:"Almagato",dose:"1 sobre 1,5 g / 8h",via:"oral"}]}]},
+  {id:"magaldrato",names:["magaldrato","riopan"],atc:"A02AD",grupo:"Antiácidos combinados",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Magaldrato",srcDose:"1 sobre 800 mg gel / 8h",via:"oral",alts:[{name:"Almagato",dose:"1 sobre 1,5 g / 8h",via:"oral"}]},
+      {srcDrug:"Magaldrato",srcDose:"1 sobre 2 g gel / 8h",via:"oral",alts:[{name:"Almagato",dose:"1 sobre 1,5 g / 8h",via:"oral"}]},
+      {srcDrug:"Magaldrato",srcDose:"1-2 comp 450 mg / 8h",via:"oral",alts:[{name:"Almagato",dose:"1 sobre 1,5 g / 8h",via:"oral"}]},
+    ]},
+  {id:"esomeprazol",names:["esomeprazol","nexium"],atc:"A02BC",grupo:"Inhibidores bomba de protones (IBP)",fecha:GFT_DATE,
+    notes:"¹ Pacientes con clopidogrel o tacrolimus → usar PANTOPRAZOL (interacción demostrada con omeprazol). ² Pacientes con SNG o problemas de deglución → usar LANSOPRAZOL FLAS 30 mg bucodispersable.",
+    entries:[
+      {indicacion:"Profilaxis úlcera por AINE",srcDrug:"Esomeprazol",srcDose:"20 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 24h",via:"oral"}]},
+      {indicacion:"Úlcera por AINE",srcDrug:"Esomeprazol",srcDose:"20 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 24h",via:"oral"}]},
+      {indicacion:"ERGE: tratamiento agudo",srcDrug:"Esomeprazol",srcDose:"20-40 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20-40 mg / 24h",via:"oral"}]},
+      {indicacion:"ERGE: mantenimiento",srcDrug:"Esomeprazol",srcDose:"20 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 24h",via:"oral"}]},
+      {indicacion:"Erradicación H. pylori",srcDrug:"Esomeprazol",srcDose:"20 mg / 12h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 12h",via:"oral"}]},
+      {indicacion:"Zollinger-Ellison",srcDrug:"Esomeprazol",srcDose:"40 mg / 12h",via:"oral",alts:[{name:"Omeprazol",dose:"60 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"lansoprazol",names:["lansoprazol","lanzoprazol","lanzor","zoton"],atc:"A02BC",grupo:"Inhibidores bomba de protones (IBP)",fecha:GFT_DATE,
+    notes:"¹ Pacientes con clopidogrel o tacrolimus → usar PANTOPRAZOL. ² En SNG: Lansoprazol FLAS 30 mg bucodispersable ya incluido en GFT.",
+    entries:[
+      {indicacion:"Úlcera por AINE / Profilaxis",srcDrug:"Lansoprazol",srcDose:"30 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 24h",via:"oral"}]},
+      {indicacion:"Úlcera duodenal/gástrica",srcDrug:"Lansoprazol",srcDose:"30 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 24h",via:"oral"}]},
+      {indicacion:"ERGE: tratamiento agudo",srcDrug:"Lansoprazol",srcDose:"30 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20-40 mg / 24h",via:"oral"}]},
+      {indicacion:"ERGE: mantenimiento",srcDrug:"Lansoprazol",srcDose:"15 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 24h",via:"oral"}]},
+      {indicacion:"Erradicación H. pylori",srcDrug:"Lansoprazol",srcDose:"30 mg / 12h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 12h",via:"oral"}]},
+      {indicacion:"Zollinger-Ellison",srcDrug:"Lansoprazol",srcDose:"60 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"60 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"pantoprazol",names:["pantoprazol","pantocal","ulcotenal"],atc:"A02BC",grupo:"Inhibidores bomba de protones (IBP)",fecha:GFT_DATE,
+    notes:"¹ Pantoprazol: de elección en pacientes con clopidogrel/tacrolimus. ² En SNG → usar LANSOPRAZOL FLAS 30 mg bucodispersable.",
+    entries:[
+      {indicacion:"Profilaxis / Úlcera por AINE",srcDrug:"Pantoprazol",srcDose:"20 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 24h",via:"oral"}]},
+      {indicacion:"Úlcera duodenal/gástrica",srcDrug:"Pantoprazol",srcDose:"40 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 24h",via:"oral"}]},
+      {indicacion:"ERGE: tratamiento agudo",srcDrug:"Pantoprazol",srcDose:"40 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20-40 mg / 24h",via:"oral"}]},
+      {indicacion:"ERGE: mantenimiento",srcDrug:"Pantoprazol",srcDose:"20-40 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 24h",via:"oral"}]},
+      {indicacion:"Erradicación H. pylori",srcDrug:"Pantoprazol",srcDose:"40 mg / 12h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 12h",via:"oral"}]},
+      {indicacion:"Zollinger-Ellison",srcDrug:"Pantoprazol",srcDose:"80 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"60 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"rabeprazol",names:["rabeprazol","pariet"],atc:"A02BC",grupo:"Inhibidores bomba de protones (IBP)",fecha:GFT_DATE,
+    notes:"Rabeprazol NO tiene indicación autorizada para profilaxis/úlcera por AINE. ¹ Clopidogrel/tacrolimus → PANTOPRAZOL. ² SNG → LANSOPRAZOL FLAS 30 mg.",
+    entries:[
+      {indicacion:"Úlcera duodenal/gástrica",srcDrug:"Rabeprazol",srcDose:"20 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 24h",via:"oral"}]},
+      {indicacion:"ERGE: tratamiento agudo",srcDrug:"Rabeprazol",srcDose:"20 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20-40 mg / 24h",via:"oral"}]},
+      {indicacion:"ERGE: mantenimiento",srcDrug:"Rabeprazol",srcDose:"10-20 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 24h",via:"oral"}]},
+      {indicacion:"Erradicación H. pylori",srcDrug:"Rabeprazol",srcDose:"20 mg / 12h",via:"oral",alts:[{name:"Omeprazol",dose:"20 mg / 12h",via:"oral"}]},
+      {indicacion:"Zollinger-Ellison",srcDrug:"Rabeprazol",srcDose:"60 mg / 24h",via:"oral",alts:[{name:"Omeprazol",dose:"60 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"acexamato",names:["acexamato"],atc:"A02BX",grupo:"Fármacos úlcera péptica",fecha:GFT_DATE,
+    entries:[
+      {indicacion:"Profilaxis úlcera por AINEs",srcDrug:"Acexamato",srcDose:"300 mg / 24h (después cena)",via:"oral",alts:[{name:"Sucralfato",dose:"1 g / 4 veces al día (antes comidas principales + al acostarse)",via:"oral"}]},
+      {indicacion:"Úlcera gástrica o duodenal",srcDrug:"Acexamato",srcDose:"300 mg / 8h",via:"oral",alts:[{name:"Sucralfato",dose:"1 g / 4 veces al día",via:"oral"}]},
+    ]},
+  {id:"bismuto",names:["bismuto subcitrato","de-nol"],atc:"A02BX",grupo:"Fármacos úlcera péptica",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Bismuto subcitrato",srcDose:"120 mg / 6h",via:"oral",alts:[{name:"Sucralfato",dose:"1 g / 4 veces al día",via:"oral"}]},
+      {srcDrug:"Bismuto subcitrato",srcDose:"240 mg / 12h",via:"oral",alts:[{name:"Sucralfato",dose:"1 g / 4 veces al día",via:"oral"}]},
+    ]},
+  // A03A — todos los del lado izq intercambiables por cualquiera del lado der
+  {id:"otilonio",names:["otilonio bromuro","spasmoctyl"],atc:"A03A",grupo:"Antiespasmódicos",fecha:GFT_DATE,
+    notes:"¹ Considerar Butilescopolamina parenteral dada la baja absorción oral.",
+    entries:[{srcDrug:"Otilonio bromuro",srcDose:"40 mg / 8h",via:"oral",
+      alts:[{name:"Butilescopolamina",dose:"10 mg / 6-8h",via:"oral"},{name:"Mebeverina",dose:"135 mg / 8h",via:"oral"},{name:"Butilescopolamina ¹",dose:"20 mg / 8h",via:"iv"}]}]},
+  {id:"pinaverio",names:["pinaverio","eldicet"],atc:"A03A",grupo:"Antiespasmódicos",fecha:GFT_DATE,
+    notes:"¹ Considerar Butilescopolamina parenteral dada la baja absorción oral.",
+    entries:[{srcDrug:"Pinaverio",srcDose:"50 mg / 6-8h",via:"oral",
+      alts:[{name:"Butilescopolamina",dose:"10 mg / 6-8h",via:"oral"},{name:"Mebeverina",dose:"135 mg / 8h",via:"oral"},{name:"Butilescopolamina ¹",dose:"20 mg / 8h",via:"iv"}]}]},
+  {id:"trimebutina",names:["trimebutina","trimebutina maleato","debridat"],atc:"A03A",grupo:"Antiespasmódicos",fecha:GFT_DATE,
+    notes:"¹ Considerar Butilescopolamina parenteral dada la baja absorción oral.",
+    entries:[{srcDrug:"Trimebutina maleato",srcDose:"100-200 mg / 8-12h",via:"oral",
+      alts:[{name:"Butilescopolamina",dose:"10 mg / 6-8h",via:"oral"},{name:"Mebeverina",dose:"135 mg / 8h",via:"oral"},{name:"Butilescopolamina ¹",dose:"20 mg / 8h",via:"iv"}]}]},
+  {id:"cinitaprida",names:["cinitaprida","cidine"],atc:"A03FA",grupo:"Procinéticos",fecha:GFT_DATE,
+    notes:"¹ En pacientes con Parkinson usar domperidona.",
+    entries:[{srcDrug:"Cinitaprida",srcDose:"1 mg / 8h",via:"oral",alts:[{name:"Metoclopramida",dose:"10 mg / 8h",via:"oral"},{name:"Domperidona ¹",dose:"10 mg / 8h",via:"oral",note:"En Parkinson"}]}]},
+  {id:"cleboprida",names:["cleboprida"],atc:"A03FA",grupo:"Procinéticos",fecha:GFT_DATE,
+    notes:"¹ En pacientes con Parkinson usar domperidona.",
+    entries:[{srcDrug:"Cleboprida",srcDose:"0,5 mg / 8h",via:"oral",alts:[{name:"Metoclopramida",dose:"10 mg / 8h",via:"oral"},{name:"Domperidona ¹",dose:"10 mg / 8h",via:"oral",note:"En Parkinson"}]}]},
+  {id:"cleboprida_sim",names:["cleboprida simeticona","cleboprida/simeticona"],atc:"A03FA",grupo:"Procinéticos",fecha:GFT_DATE,
+    entries:[{srcDrug:"Cleboprida/Simeticona",srcDose:"0,5/200 mg / 8h",via:"oral",alts:[{name:"Metoclopramida + Simeticona",dose:"10 mg + 200 mg",via:"oral"}]}]},
+  {id:"granisteron",names:["granisetrón","granisteron","kytril"],atc:"A04AA",grupo:"Antieméticos 5-HT3",fecha:GFT_DATE,
+    notes:"¹ Cuando la dosis de cisplatino excede 100 mg/m² considerar dosis más altas de ondansetrón (24 mg). ² Palonosetrón de uso restringido según protocolo (ver Dictamen CACFT SERGAS).",
+    entries:[
+      {indicacion:"Post QT o RT – oral",srcDrug:"Granisetrón",srcDose:"1 mg / 12h",via:"oral",alts:[{name:"Ondansetrón ¹",dose:"8 mg / 12h",via:"oral/iv"}]},
+      {indicacion:"Quirófano / pre-QT – iv",srcDrug:"Granisetrón",srcDose:"3 mg / 24h",via:"iv",alts:[{name:"Ondansetrón ¹",dose:"4 mg iv dosis única (QX) ó 16 mg 1h pre-QX + 8 mg/8h post-QX (2 dosis)",via:"iv"},{name:"Palonosetrón ²",dose:"250 mcg dosis única pre-QT",via:"iv",note:"Uso restringido según protocolo"}]},
+    ]},
+  {id:"triamcinolona_rect",names:["triamcinolona rectal"],atc:"A07EA",grupo:"Antiinflamatorios intestinales locales",fecha:GFT_DATE,
+    entries:[{srcDrug:"Triamcinolona",srcDose:"1 aplicación / 12-24h",via:"rectal",alts:[{name:"Budesonida",dose:"1 enema / 24h",via:"rectal"}]}]},
+  // A10BB - Sulfonilúreas
+  {id:"glibenclamida",names:["glibenclamida","daonil","glucolon","glibenclamida 5mg"],atc:"A10BB",grupo:"Antidiabéticos – Sulfonilúreas (derivadas urea)",fecha:GFT_DATE,
+    notes:"Se recomienda monitorizar glucemia. ¹ Gliclazida: sin ajuste en IR leve-moderada; IR severa → insulina. ² Glimepirida: ancianos iniciar 1 mg/día; no usar ClCr < 30 ml/min.",
+    entries:[{srcDrug:"Glibenclamida (Daonil®, Glucolon®)",srcDose:"5 mg / 24h",via:"oral",alts:[{name:"Gliclazida (Diamicron®) ¹",dose:"30 mg / 24h",via:"oral"},{name:"Glimepirida ²",dose:"2 mg / 24h",via:"oral"}]}]},
+  {id:"glipizida",names:["glipizida","minodiab","glipizida 5mg"],atc:"A10BB",grupo:"Antidiabéticos – Sulfonilúreas (derivadas urea)",fecha:GFT_DATE,
+    notes:"Se recomienda monitorizar glucemia. ¹ Gliclazida: sin ajuste en IR leve-moderada; IR severa → insulina. ² Glimepirida: ancianos iniciar 1 mg/día; no usar ClCr < 30 ml/min.",
+    entries:[{srcDrug:"Glipizida (Minodiab®)",srcDose:"5 mg / 24h",via:"oral",alts:[{name:"Gliclazida (Diamicron®) ¹",dose:"30 mg / 24h",via:"oral"},{name:"Glimepirida ²",dose:"2 mg / 24h",via:"oral"}]}]},
+  {id:"glisentida",names:["glisentida","staticum","glisentida 5mg"],atc:"A10BB",grupo:"Antidiabéticos – Sulfonilúreas (derivadas urea)",fecha:GFT_DATE,
+    notes:"Se recomienda monitorizar glucemia. ¹ Gliclazida: sin ajuste en IR leve-moderada; IR severa → insulina. ² Glimepirida: ancianos iniciar 1 mg/día; no usar ClCr < 30 ml/min.",
+    entries:[{srcDrug:"Glisentida (Staticum®)",srcDose:"5 mg / 24h",via:"oral",alts:[{name:"Gliclazida (Diamicron®) ¹",dose:"30 mg / 24h",via:"oral"},{name:"Glimepirida ²",dose:"2 mg / 24h",via:"oral"}]}]},
+  {id:"pioglitazona",names:["pioglitazona","actos"],atc:"A10BG",grupo:"Antidiabéticos – Tiazolidindionas",fecha:GFT_DATE,
+    notes:"Sin alternativa directa. Suspender y realizar ajustes con insulina según necesidad.",
+    entries:[{srcDrug:"Pioglitazona",srcDose:"15-30 mg / 24h (hasta 45 mg/24h)",via:"oral",alts:[{name:"⚠ Suspender tratamiento",dose:"Monitorizar glucemias y ajustar con insulina",via:""}]}]},
+  {id:"vildagliptina",names:["vildagliptina","galvus"],atc:"A10BH",grupo:"Antidiabéticos – iDPP-4",fecha:GFT_DATE,
+    notes:"¹ Valorar uso de insulina durante estancia hospitalaria. ² En IR moderada (ClCr 30-50 ml/min): sitagliptina 50 mg/24h. En IR grave (ClCr <30 ml/min) o diálisis: sitagliptina 25 mg/24h.",
+    entries:[{srcDrug:"Vildagliptina ¹",srcDose:"50 mg / 12h",via:"oral",alts:[{name:"Sitagliptina ²",dose:"100 mg / 24h",via:"oral"}]}]},
+  {id:"alogliptina",names:["alogliptina","vipidia"],atc:"A10BH",grupo:"Antidiabéticos – iDPP-4",fecha:GFT_DATE,
+    notes:"¹ Valorar uso de insulina durante estancia hospitalaria. Ajuste en IR: ver sitagliptina.",
+    entries:[{srcDrug:"Alogliptina ¹",srcDose:"25 mg / 24h",via:"oral",alts:[{name:"Sitagliptina",dose:"100 mg / 24h",via:"oral"}]}]},
+  {id:"linagliptina",names:["linagliptina","trajenta"],atc:"A10BH",grupo:"Antidiabéticos – iDPP-4",fecha:GFT_DATE,
+    notes:"¹ Valorar uso de insulina durante estancia hospitalaria.",
+    entries:[{srcDrug:"Linagliptina ¹",srcDose:"5 mg / 24h",via:"oral",alts:[{name:"Sitagliptina",dose:"100 mg / 24h",via:"oral"}]}]},
+  {id:"saxagliptina",names:["saxagliptina","onglyza"],atc:"A10BH",grupo:"Antidiabéticos – iDPP-4",fecha:GFT_DATE,
+    notes:"¹ Valorar uso de insulina durante estancia hospitalaria.",
+    entries:[{srcDrug:"Saxagliptina ¹",srcDose:"5 mg / 24h",via:"oral",alts:[{name:"Sitagliptina",dose:"100 mg / 24h",via:"oral"}]}]},
+  // Combinaciones Metformina + iDPP-4 - nombres exactos de la guía
+  {id:"met_sita",names:["metformina sitagliptina","janumet","velmetia","janumet 50/1000","janumet 50/850"],atc:"A10BH",grupo:"Antidiabéticos – Metformina + iDPP-4 (combinación)",fecha:GFT_DATE,
+    notes:"¹ Dosificación de sitagliptina según equivalencias iDPP-4 de la guía. Ajustar por función renal.",
+    entries:[{srcDrug:"Metformina + Sitagliptina",srcDose:"A dosis habitual",via:"oral",alts:[{name:"Sitagliptina ¹",dose:"Según equivalencias iDPP-4",via:"oral"},{name:"Metformina",dose:"850 mg",via:"oral"}]}]},
+  {id:"met_vilda",names:["metformina vildagliptina","eucreas","zomarist","eucreas 50/850","eucreas 50/1000"],atc:"A10BH",grupo:"Antidiabéticos – Metformina + iDPP-4 (combinación)",fecha:GFT_DATE,
+    notes:"¹ Vildagliptina 50 mg/12h → Sitagliptina 100 mg/24h.",
+    entries:[{srcDrug:"Metformina + Vildagliptina",srcDose:"A dosis habitual",via:"oral",alts:[{name:"Sitagliptina ¹",dose:"100 mg / 24h",via:"oral"},{name:"Metformina",dose:"850 mg",via:"oral"}]}]},
+  {id:"met_saxa",names:["metformina saxagliptina","komboglyze","komboglyze 2.5/850","komboglyze 2.5/1000"],atc:"A10BH",grupo:"Antidiabéticos – Metformina + iDPP-4 (combinación)",fecha:GFT_DATE,
+    notes:"¹ Saxagliptina 5 mg/24h → Sitagliptina 100 mg/24h.",
+    entries:[{srcDrug:"Metformina + Saxagliptina",srcDose:"A dosis habitual",via:"oral",alts:[{name:"Sitagliptina ¹",dose:"100 mg / 24h",via:"oral"},{name:"Metformina",dose:"850 mg",via:"oral"}]}]},
+  {id:"met_lina",names:["metformina linagliptina","jentadueto","jentadueto 2.5/850","jentadueto 2.5/1000"],atc:"A10BH",grupo:"Antidiabéticos – Metformina + iDPP-4 (combinación)",fecha:GFT_DATE,
+    notes:"¹ Linagliptina 5 mg/24h → Sitagliptina 100 mg/24h.",
+    entries:[{srcDrug:"Metformina + Linagliptina",srcDose:"A dosis habitual",via:"oral",alts:[{name:"Sitagliptina ¹",dose:"100 mg / 24h",via:"oral"},{name:"Metformina",dose:"850 mg",via:"oral"}]}]},
+  {id:"met_alo",names:["metformina alogliptina","vipdomet","vipdomet 12.5/850","vipdomet 12.5/1000"],atc:"A10BH",grupo:"Antidiabéticos – Metformina + iDPP-4 (combinación)",fecha:GFT_DATE,
+    notes:"¹ Alogliptina 25 mg/24h → Sitagliptina 100 mg/24h.",
+    entries:[{srcDrug:"Metformina + Alogliptina",srcDose:"A dosis habitual",via:"oral",alts:[{name:"Sitagliptina ¹",dose:"100 mg / 24h",via:"oral"},{name:"Metformina",dose:"850 mg",via:"oral"}]}]},
+  {id:"empaglifozina",names:["empagliflozina","empaglifozina","jardiance"],atc:"A10BK",grupo:"Antidiabéticos – iSGLT-2",fecha:GFT_DATE,
+    notes:"* Susceptible de modificación de dosis según función renal. Consultar ficha técnica.",
+    entries:[
+      {indicacion:"Diabetes mellitus tipo 2",srcDrug:"Empagliflozina *",srcDose:"10 mg / día (máx 25 mg/día)",via:"oral",alts:[{name:"Dapagliflozina",dose:"10 mg / día",via:"oral"}]},
+      {indicacion:"Insuficiencia cardiaca",srcDrug:"Empagliflozina *",srcDose:"10 mg / día",via:"oral",alts:[{name:"Dapagliflozina",dose:"10 mg / día",via:"oral"}]},
+    ]},
+  {id:"canaglifozina",names:["canagliflozina","canaglifozina","invokana"],atc:"A10BK",grupo:"Antidiabéticos – iSGLT-2",fecha:GFT_DATE,
+    notes:"* Susceptible de modificación de dosis según función renal. Consultar ficha técnica.",
+    entries:[{indicacion:"Diabetes mellitus tipo 2",srcDrug:"Canagliflozina *",srcDose:"100-300 mg / día",via:"oral",alts:[{name:"Dapagliflozina",dose:"10 mg / día",via:"oral"}]}]},
+  {id:"ertuglifozina",names:["ertugliflozina","ertuglifozina","steglatro"],atc:"A10BK",grupo:"Antidiabéticos – iSGLT-2",fecha:GFT_DATE,
+    notes:"* Susceptible de modificación de dosis según función renal. Consultar ficha técnica.",
+    entries:[{indicacion:"Diabetes mellitus tipo 2",srcDrug:"Ertugliflozina *",srcDose:"5-15 mg / día",via:"oral",alts:[{name:"Dapagliflozina",dose:"10 mg / día",via:"oral"}]}]},
+  // Vitamina D - NO incluidos
+  {id:"hidroferol_choque",names:["hidroferol choque","calcifediol 3mg","hidroferol 3mg"],atc:"A11CC",grupo:"Vitamina D y análogos",fecha:GFT_DATE,
+    notes:"Hidroferol choque® 3 mg solución oral NO está incluido en GFT. Ver alternativas disponibles.",
+    entries:[{srcDrug:"Hidroferol choque® (calcifediol)",srcDose:"3 mg – solución oral",via:"oral",alts:[{name:"Calcitriol (Rocaltrol®)",dose:"0,25 mcg cáps (ajustar según calcemia)",via:"oral"},{name:"Hidroferol® amp. bebible",dose:"266 mcg amp. bebible (disponible en GFT)",via:"oral",note:"Consultar con Farmacia la pauta adecuada"}]}]},
+  {id:"alfacalcidol",names:["alfacalcidol","etalpha"],atc:"A11CC",grupo:"Vitamina D y análogos",fecha:GFT_DATE,
+    notes:"¹ Ajustar dosis siempre en función de la calcemia. Dosificación Etalpha® (Alfacalcidol): Prediálisis → inicio 0,25 mcg/día, mantenimiento 0,5 mcg/día. Diálisis estadio 5 → inicio 0,5 mcg/día; incrementos de 0,25-0,5 mcg hasta valores normales; mantenimiento 1 mcg/día.",
+    entries:[
+      {indicacion:"Dosis de inicio",srcDrug:"Alfacalcidol ¹",srcDose:"0,25-0,5 mcg / día",via:"oral",alts:[{name:"Calcitriol (Rocaltrol®)",dose:"0,25 mcg / día",via:"oral"}]},
+      {indicacion:"Dosis de mantenimiento",srcDrug:"Alfacalcidol ¹",srcDose:"0,5-1 mcg / día",via:"oral",alts:[{name:"Calcitriol (Rocaltrol®)",dose:"0,25 mcg / día (ajustar según calcemia)",via:"oral"}]},
+    ]},
+  {id:"sulbutiamina",names:["sulbutiamina","arcalion"],atc:"A11DA",grupo:"Vitamina B1",fecha:GFT_DATE,
+    notes:"* En urgencias: hasta 1000 mg iv lento durante las primeras 12h, 3 días.",
+    entries:[{srcDrug:"Sulbutiamina",srcDose:"400-600 mg / 24h",via:"oral",alts:[{name:"Tiamina 300 mg",dose:"300 mg / 24h",via:"oral"},{name:"Tiamina 100 mg *",dose:"50-200 mg / 24h",via:"parenteral (iv/im)"}]}]},
+  // Calcio (pág 10-11) - tabla completa
+  {id:"calcio_bajo",names:["calcio 20 fuerte","caosina d","mencalisvit"],atc:"A12A",grupo:"Suplementos minerales – Calcio + Vit D",fecha:GFT_DATE,
+    notes:"Equivalencia basada en el contenido de calcio elemental. Las especialidades incluidas en GFT son Ostine®, Calcium Sandoz D® y Mastical D® (500 mg Ca + 400 UI Vit D3).",
+    entries:[
+      {srcDrug:"Calcio 20 fuerte® emulsión",srcDose:"60 mg Ca / 5 ml + 166,6 UI Vit D3 / 5 ml",via:"oral",alts:[{name:"Ostine® comp ó Calcium Sandoz D® ó Mastical D®",dose:"500 mg Ca + 400 UI Vit D3 / comprimido",via:"oral"}]},
+      {srcDrug:"Caosina D® emulsión",srcDose:"250 mg Ca / 5 ml + 200 UI Vit D3 / 5 ml",via:"oral",alts:[{name:"Ostine® comp ó Calcium Sandoz D® ó Mastical D®",dose:"500 mg Ca + 400 UI Vit D3 / comprimido",via:"oral"}]},
+      {srcDrug:"Mencalisvit® sobres",srcDose:"350 mg Ca + 200 UI Vit D3 / sobre",via:"oral",alts:[{name:"Ostine® comp ó Calcium Sandoz D® ó Mastical D®",dose:"500 mg Ca + 400 UI Vit D3 / comprimido",via:"oral"}]},
+    ]},
+  {id:"calcio_600_400",names:["calcial d","calcio d arkomedica","calcio d isdin","carbocal d","cimascal d forte","bonesil d","disnal","veriscal d","natecal d","calcium sandoz d 500","mastical d 500","ideos","ibercal d","osvical","tepox cal d"],atc:"A12A",grupo:"Suplementos minerales – Calcio + Vit D",fecha:GFT_DATE,
+    notes:"Presentaciones de 600 mg Ca + 400 UI Vit D3 o 500 mg Ca + 400 UI Vit D3 — todas equivalentes.",
+    entries:[
+      {srcDrug:"Calcial D® / Calcio D Arkomedica® / Calcio D Isdin® / Carbocal D® / Cimascal D forte® / Bonesil D® / Disnal® / Veriscal D® / Natecal D® (600 mg Ca + 400 UI)",srcDose:"1 comprimido / 24h",via:"oral",alts:[{name:"Ostine® ó Calcium Sandoz D® ó Mastical D®",dose:"1 comp (500 mg Ca + 400 UI Vit D3) / 24h",via:"oral"}]},
+      {srcDrug:"Calcium Sandoz D® / Mastical D® / Ideos® (500 mg Ca + 400 UI)",srcDose:"1 comprimido / 24h",via:"oral",alts:[{name:"Ostine® ó Calcium Sandoz D® ó Mastical D®",dose:"1 comp (500 mg Ca + 400 UI Vit D3) / 24h",via:"oral"}]},
+      {srcDrug:"Ibercal D® / Osvical® / Tepox Cal D® sobres (500-600 mg Ca + 400 UI)",srcDose:"1 sobre / 24h",via:"oral",alts:[{name:"Ostine® ó Calcium Sandoz D® ó Mastical D®",dose:"1 comp (500 mg Ca + 400 UI Vit D3) / 24h",via:"oral"}]},
+    ]},
+  {id:"calcio_1000",names:["ideos unidia","calcium sandoz d forte","mastical d unidia","calodis","osteomerck","recordati calcio","calcio vitamina d3 farmalider"],atc:"A12A",grupo:"Suplementos minerales – Calcio + Vit D (dosis alta)",fecha:GFT_DATE,
+    notes:"Presentaciones de alta dosis (1000-1280 mg Ca). Equivalen a 2 comprimidos de las presentaciones incluidas.",
+    entries:[
+      {srcDrug:"Ideos Unidia® sobres (1000 mg Ca + 880 UI Vit D3)",srcDose:"1 sobre / 24h",via:"oral",alts:[{name:"Ostine® / Calcium Sandoz D® / Mastical D®",dose:"2 comp (1000 mg Ca + 800 UI Vit D3) / 24h ó Calcio/Vitamina D3 1000 mg Ca + 880 UI Vit D3",via:"oral"}]},
+      {srcDrug:"Calcium Sandoz D Forte® / Mastical D Unidia® / Calodis® (1000 mg Ca + 880 UI)",srcDose:"1 comp / 24h",via:"oral",alts:[{name:"Ostine® / Calcium Sandoz D® / Mastical D®",dose:"2 comp (1000 mg Ca + 800 UI Vit D3) / 24h",via:"oral"}]},
+      {srcDrug:"Osteomerck® sobres (1280 mg Ca + 800 UI) / Recordati® sobres (1200 mg Ca + 800 UI) / Calcio/Vit D3 Farmalider® sobres (1200 mg Ca + 800 UI)",srcDose:"1 sobre / 24h",via:"oral",alts:[{name:"2 comp de Ostine® / Calcium Sandoz D® / Mastical D®",dose:"(1000 mg Ca + 800 UI Vit D3) / 24h",via:"oral"}]},
+    ]},
+  {id:"boi_k_asp",names:["boi-k aspártico","potasio aspartato"],atc:"A12BA",grupo:"Suplementos potasio",fecha:GFT_DATE,
+    entries:[{srcDrug:"Boi-K Aspártico® (Potasio aspartato 25 mEq/comp)",srcDose:"2-4 comp / día en 2-3 tomas",via:"oral",alts:[{name:"Potasion® (Potasio cloruro 8 mEq/cáps)",dose:"5-12 cáps / día en 2-3 tomas",via:"oral"},{name:"Boi-K® (Potasio ascorbato 10 mEq/comp)",dose:"2-6 comp / día en 2-3 tomas",via:"oral"}]}]},
+
+  // ══ GRUPO B ══
+  {id:"hierro_oral_comp",names:["ferbisol","ferrogradumet","tardyferon","losferron"],atc:"B03AA",grupo:"Preparados de hierro oral (comprimidos/cápsulas)",fecha:GFT_DATE,
+    notes:"La dosis diaria de Fe recomendada es 150-200 mg. No superar 5 mg Fe(II)/kg/día. Las sales ferrosas se absorben mejor que las férricas. Para neonatos y lactantes: Glutaferro® gotas (sulfato ferroso 30 mg Fe/ml) — lactantes 2-5 gotas/6h; prematuros 1-2 gotas/4h.",
+    entries:[
+      {srcDrug:"Ferbisol® cáps (Glicina sulfato ferroso 567 mg)",srcDose:"100 mg Fe(II) / cáps",via:"oral",alts:[{name:"Ferrosanol® cáps (Glicina sulfato ferroso 567 mg)",dose:"100 mg Fe(II) / cáps",via:"oral"}]},
+      {srcDrug:"Ferrogradumet® comp (Sulfato hierro 525 mg)",srcDose:"105 mg Fe(II) / comp",via:"oral",alts:[{name:"Ferrosanol® cáps (Glicina sulfato ferroso 567 mg)",dose:"100 mg Fe(II) / cáps",via:"oral"}]},
+      {srcDrug:"Tardyferon® comp (Sulfato hierro + mucoproteasa 256 mg)",srcDose:"80 mg Fe(II) / comp",via:"oral",alts:[{name:"Ferrosanol® cáps (Glicina sulfato ferroso 567 mg)",dose:"100 mg Fe(II) / cáps",via:"oral"}]},
+      {srcDrug:"Losferron® comp (Gluconato hierro 695 mg)",srcDose:"80 mg Fe(II) / comp",via:"oral",alts:[{name:"Ferrosanol® cáps (Glicina sulfato ferroso 567 mg)",dose:"100 mg Fe(II) / cáps",via:"oral"}]},
+    ]},
+  {id:"hierro_oral_vial",names:["ferroprotina","ferrocur","lactoferrina","kilor","profer","syron","cromatonbic ferro","podertonic"],atc:"B03AB",grupo:"Preparados de hierro oral (viales/sobres)",fecha:GFT_DATE,
+    notes:"Equivalencia orientativa. La dosis diaria de Fe recomendada es 150-200 mg.",
+    entries:[
+      {srcDrug:"Ferroprotina® amp. bebible (Ferrimanitol ovoalbúmina 100 mg)",srcDose:"20 mg Fe(III) / amp",via:"oral",alts:[{name:"Ferplex® vial bebible (Proteinsuccinilato hierro 800 mg)",dose:"40 mg Fe(III) / vial — usar 0,5 vial",via:"oral"}]},
+      {srcDrug:"Ferrocur® / Lactoferrina® vial (Proteinsuccinilato hierro 800 mg)",srcDose:"40 mg Fe(III) / vial",via:"oral",alts:[{name:"Ferplex® vial bebible (Proteinsuccinilato hierro 800 mg)",dose:"40 mg Fe(III) / vial",via:"oral"}]},
+      {srcDrug:"Kilor® / Profer® / Syron® sobres (Ferrimanitol ovoalbúmina 300 mg)",srcDose:"40 mg Fe(III) / sobre",via:"oral",alts:[{name:"Ferplex® vial bebible (Proteinsuccinilato hierro 800 mg)",dose:"40 mg Fe(III) / vial",via:"oral"}]},
+      {srcDrug:"Cromatonbic Ferro® vial (Hierro lactato 157,1 mg)",srcDose:"37,5 mg Fe(II) / vial",via:"oral",alts:[{name:"Ferplex® vial bebible (Proteinsuccinilato hierro 800 mg)",dose:"40 mg Fe(III) / vial",via:"oral"}]},
+      {srcDrug:"Podertonic® sobres (Ferrocolinato 500 mg)",srcDose:"56,3 mg Fe(III) / sobre",via:"oral",alts:[{name:"Ferplex® vial bebible (Proteinsuccinilato hierro 800 mg)",dose:"40 mg Fe(III) / vial",via:"oral"}]},
+      {srcDrug:"Kilor® / Profer® / Syron® sobres (Ferrimanitol ovoalbúmina 600 mg)",srcDose:"80 mg Fe(III) / sobre",via:"oral",alts:[{name:"Ferplex® vial bebible (Proteinsuccinilato hierro 800 mg)",dose:"40 mg Fe(III) / vial — usar 2 viales",via:"oral"}]},
+      {srcDrug:"Podertonic® sobres (Ferrocolinato 1 g)",srcDose:"112,6 mg Fe(III) / sobre",via:"oral",alts:[{name:"Ferplex® vial bebible (Proteinsuccinilato hierro 800 mg)",dose:"40 mg Fe(III) / vial — usar 2 viales",via:"oral"}]},
+    ]},
+  {id:"dalteparina",names:["dalteparina","fragmin"],atc:"B01AB",grupo:"HBPM",fecha:GFT_DATE,noDirecta:true,
+    notes:"Este grupo NO es susceptible de sustitución directa por el Servicio de Farmacia. Se proponen equivalencias orientativas.",
+    entries:[
+      {indicacion:"Profilaxis TVE – cirugía general (riesgo moderado)",srcDrug:"Dalteparina",srcDose:"Según indicación",via:"sc",alts:[{name:"Enoxaparina",dose:"20-40 mg / 24h — iniciar 2h antes de la intervención",via:"sc"}]},
+      {indicacion:"Profilaxis TVE – cirugía ortopédica (riesgo elevado)",srcDrug:"Dalteparina",srcDose:"Según indicación",via:"sc",alts:[{name:"Bemiparina (Hibor®)",dose:"3500 UI 2h antes ó 6h después; días siguientes 3500 UI/día (IR: 2500 UI/día)",via:"sc"},{name:"Enoxaparina",dose:"40 mg / 24h — iniciar 12h antes",via:"sc"}]},
+      {indicacion:"Tratamiento TVP",srcDrug:"Dalteparina",srcDose:"Según indicación",via:"sc",alts:[{name:"Enoxaparina",dose:"1,5 mg/kg / 24h (5 días); desde día 6: 1 mg/kg/24h hasta anticoagulación oral efectiva",via:"sc"}]},
+    ]},
+  {id:"nadroparina",names:["nadroparina","fraxiparina","fraxodi"],atc:"B01AB",grupo:"HBPM",fecha:GFT_DATE,noDirecta:true,
+    notes:"Este grupo NO es susceptible de sustitución directa por el Servicio de Farmacia.",
+    entries:[
+      {indicacion:"Profilaxis TVE",srcDrug:"Nadroparina",srcDose:"Según indicación",via:"sc",alts:[{name:"Enoxaparina",dose:"20-40 mg / 24h",via:"sc"}]},
+      {indicacion:"Tratamiento TVP",srcDrug:"Nadroparina",srcDose:"Según indicación",via:"sc",alts:[{name:"Enoxaparina",dose:"1,5 mg/kg / 24h",via:"sc"}]},
+    ]},
+  {id:"tinzaparina",names:["tinzaparina","innohep"],atc:"B01AB",grupo:"HBPM",fecha:GFT_DATE,noDirecta:true,
+    notes:"Este grupo NO es susceptible de sustitución directa por el Servicio de Farmacia.",
+    entries:[
+      {indicacion:"Profilaxis TVE",srcDrug:"Tinzaparina",srcDose:"Según indicación",via:"sc",alts:[{name:"Enoxaparina",dose:"20-40 mg / 24h",via:"sc"}]},
+      {indicacion:"Tratamiento TVP",srcDrug:"Tinzaparina",srcDose:"Según indicación",via:"sc",alts:[{name:"Enoxaparina",dose:"1,5 mg/kg / 24h",via:"sc"}]},
+    ]},
+  {id:"triflusal",names:["triflusal","disgren"],atc:"B01AC",grupo:"Antiagregantes plaquetarios",fecha:GFT_DATE,
+    notes:"¹ Confirmar posibles alergias. No intercambiar si el paciente lo llevaba en su domicilio.",
+    entries:[
+      {srcDrug:"Triflusal ¹ (Disgren®)",srcDose:"300 mg / 24h",via:"oral",alts:[{name:"Ácido acetilsalicílico",dose:"100 mg / 24h",via:"oral"}]},
+      {srcDrug:"Triflusal ¹ (Disgren®)",srcDose:"600 mg / 24h",via:"oral",alts:[{name:"Ácido acetilsalicílico",dose:"300 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"dipiridamol",names:["dipiridamol","persantin"],atc:"B01AC",grupo:"Antiagregantes plaquetarios",fecha:GFT_DATE,
+    entries:[{srcDrug:"Dipiridamol",srcDose:"100 mg / 6-8h",via:"oral",alts:[{name:"Ácido acetilsalicílico",dose:"100-300 mg / 24h",via:"oral"}]}]},
+  {id:"cilostazol",names:["cilostazol","pletal"],atc:"B01AC",grupo:"Antiagregantes plaquetarios",fecha:GFT_DATE,
+    notes:"Se considera carente de utilidad en pacientes hospitalizados.",
+    entries:[{srcDrug:"Cilostazol",srcDose:"A cualquier dosis",via:"oral",alts:[{name:"⚠ Suspender durante ingreso hospitalario",dose:"Carente de utilidad en pacientes hospitalizados",via:""}]}]},
+  {id:"aminocaproico",names:["ácido aminocaproico","acido aminocaproico"],atc:"B02AA",grupo:"Antifibrinolíticos",fecha:GFT_DATE,
+    entries:[{srcDrug:"Ácido aminocaproico",srcDose:"4 g / 8h",via:"iv",alts:[{name:"Ácido tranexámico",dose:"1 g / 8h",via:"iv"},{name:"Ácido tranexámico",dose:"1 g / 6-8h",via:"oral"}]}]},
+
+  // ══ GRUPO C ══
+  {id:"isosorbida_mono_60",names:["isosorbida mononitrato 60mg"],atc:"C01DA",grupo:"Nitratos orgánicos",fecha:GFT_DATE,
+    notes:"La dosis diaria total se ajustará según respuesta del paciente.",
+    entries:[{srcDrug:"Isosorbida mononitrato",srcDose:"60 mg",via:"oral",alts:[{name:"Isosorbida mononitrato",dose:"50 mg",via:"oral"}]}]},
+  {id:"isosorbida_di",names:["isosorbida dinitrato","cardinit"],atc:"C01DA",grupo:"Nitratos orgánicos",fecha:GFT_DATE,
+    notes:"La dosis diaria total se ajustará según respuesta del paciente.",
+    entries:[
+      {srcDrug:"Isosorbida dinitrato",srcDose:"5 mg / 8h",via:"oral",alts:[{name:"Isosorbida mononitrato",dose:"20 mg / 8-12h",via:"oral"}]},
+      {srcDrug:"Isosorbida dinitrato",srcDose:"10 mg / 8h",via:"oral",alts:[{name:"Isosorbida mononitrato",dose:"40 mg / 8-12h",via:"oral"}]},
+      {srcDrug:"Isosorbida dinitrato retard",srcDose:"20 mg / 24h",via:"oral",alts:[{name:"Isosorbida mononitrato retard",dose:"50 mg / 24h",via:"oral"}]},
+      {srcDrug:"Isosorbida dinitrato retard",srcDose:"60 mg / 24h",via:"oral",alts:[{name:"Isosorbida mononitrato retard",dose:"50 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"prazosina",names:["prazosina","minipres"],atc:"C02C",grupo:"Antiadrenérgicos de acción periférica",fecha:GFT_DATE,
+    notes:"¹ Dosis referidas al tratamiento de HTA. Para HBP consultar sección G04CA.",
+    entries:[
+      {indicacion:"HTA – inicio ¹",srcDrug:"Prazosina",srcDose:"0,5 mg / 8-12h",via:"oral",alts:[{name:"Doxazosina",dose:"1-2 mg / 24h",via:"oral"}]},
+      {indicacion:"HTA – mantenimiento ¹",srcDrug:"Prazosina",srcDose:"4-10 mg / 12h",via:"oral",alts:[{name:"Doxazosina",dose:"4-8 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"bumetanida",names:["bumetanida","fordiuran"],atc:"C03CA",grupo:"Diuréticos del asa",fecha:GFT_DATE,
+    entries:[{srcDrug:"Bumetanida",srcDose:"1 mg / 24h",via:"oral",alts:[{name:"Furosemida",dose:"40 mg / 24h",via:"oral"}]}]},
+  {id:"piretanida",names:["piretanida"],atc:"C03CA",grupo:"Diuréticos del asa",fecha:GFT_DATE,
+    entries:[{srcDrug:"Piretanida",srcDose:"6 mg / 24h",via:"oral",alts:[{name:"Furosemida",dose:"40 mg / 24h",via:"oral"}]}]},
+  {id:"torasemida",names:["torasemida","sutril","unat"],atc:"C03CA",grupo:"Diuréticos del asa",fecha:GFT_DATE,
+    entries:[{srcDrug:"Torasemida",srcDose:"20 mg / 24h",via:"oral",alts:[{name:"Furosemida",dose:"40 mg / 24h",via:"oral"}]}]},
+  {id:"triamtereno_furo",names:["triamtereno furosemida","triamtereno+furosemida","diurex"],atc:"C03CA",grupo:"Diuréticos – Combinación con ahorrador K",fecha:GFT_DATE,
+    entries:[{srcDrug:"Triamtereno + Furosemida (Diurex®)",srcDose:"25/77,5 mg",via:"oral",alts:[{name:"Furosemida 40 mg + Espironolactona 25 mg",dose:"2 comp Furosemida 40 mg + 1 comp Espironolactona 25 mg",via:"oral"}]}]},
+  {id:"nebivolol",names:["nebivolol","lobivon","nebilet"],atc:"C07AB",grupo:"Betabloqueantes selectivos",fecha:GFT_DATE,
+    notes:"¹ Bisoprolol también indicado en angina estable: 5-10 mg/24h (máx 20 mg/día).",
+    entries:[
+      {indicacion:"HTA",srcDrug:"Nebivolol",srcDose:"5 mg / 24h",via:"oral",alts:[{name:"Bisoprolol ¹",dose:"5 mg / 24h",via:"oral"}]},
+      {indicacion:"ICC – inicio",srcDrug:"Nebivolol",srcDose:"1,25 mg / 24h",via:"oral",alts:[{name:"Bisoprolol ¹",dose:"1,25 mg / 24h (dosis máx: 10 mg/24h)",via:"oral"}]},
+    ]},
+  {id:"celiprolol",names:["celiprolol","selectol"],atc:"C07AB",grupo:"Betabloqueantes selectivos",fecha:GFT_DATE,
+    entries:[{srcDrug:"Celiprolol",srcDose:"200-400 mg / 24h",via:"oral",alts:[{name:"Atenolol",dose:"50-100 mg / 24h",via:"oral"}]}]},
+  {id:"barnidipino",names:["barnidipino","vasexten"],atc:"C08CA",grupo:"Calcioantagonistas dihidropiridinas",fecha:GFT_DATE,
+    entries:[{srcDrug:"Barnidipino",srcDose:"10 mg / 24h",via:"oral",alts:[{name:"Amlodipino",dose:"5 mg / 24h",via:"oral"}]}]},
+  {id:"felodipino",names:["felodipino","plendil"],atc:"C08CA",grupo:"Calcioantagonistas dihidropiridinas",fecha:GFT_DATE,
+    entries:[{srcDrug:"Felodipino",srcDose:"5 mg / 24h",via:"oral",alts:[{name:"Amlodipino",dose:"5 mg / 24h",via:"oral"}]}]},
+  {id:"lacidipino",names:["lacidipino","motens"],atc:"C08CA",grupo:"Calcioantagonistas dihidropiridinas",fecha:GFT_DATE,
+    entries:[{srcDrug:"Lacidipino",srcDose:"2 mg / 24h",via:"oral",alts:[{name:"Amlodipino",dose:"5 mg / 24h",via:"oral"}]}]},
+  {id:"lercanidipino",names:["lercanidipino","zanidip","lercapin"],atc:"C08CA",grupo:"Calcioantagonistas dihidropiridinas",fecha:GFT_DATE,
+    entries:[{srcDrug:"Lercanidipino",srcDose:"10 mg / 24h",via:"oral",alts:[{name:"Amlodipino",dose:"5 mg / 24h",via:"oral"}]}]},
+  {id:"manidipino",names:["manidipino","manyper"],atc:"C08CA",grupo:"Calcioantagonistas dihidropiridinas",fecha:GFT_DATE,
+    entries:[{srcDrug:"Manidipino",srcDose:"10 mg / 24h",via:"oral",alts:[{name:"Amlodipino",dose:"5 mg / 24h",via:"oral"}]}]},
+  {id:"nicardipino",names:["nicardipino"],atc:"C08CA",grupo:"Calcioantagonistas dihidropiridinas",fecha:GFT_DATE,
+    entries:[{srcDrug:"Nicardipino",srcDose:"20 mg / 8h",via:"oral",alts:[{name:"Amlodipino",dose:"5 mg / 24h",via:"oral"}]}]},
+  {id:"nisoldipino",names:["nisoldipino"],atc:"C08CA",grupo:"Calcioantagonistas dihidropiridinas",fecha:GFT_DATE,
+    entries:[{srcDrug:"Nisoldipino",srcDose:"10 mg / 24h",via:"oral",alts:[{name:"Amlodipino",dose:"5 mg / 24h",via:"oral"}]}]},
+  {id:"nitrendipino",names:["nitrendipino","baypress"],atc:"C08CA",grupo:"Calcioantagonistas dihidropiridinas",fecha:GFT_DATE,
+    entries:[{srcDrug:"Nitrendipino",srcDose:"10 mg / 24h",via:"oral",alts:[{name:"Amlodipino",dose:"5 mg / 24h",via:"oral"}]}]},
+  {id:"benazepril",names:["benazepril","cibacen"],atc:"C09AA",grupo:"IECAs",fecha:GFT_DATE,entries:[{srcDrug:"Benazepril",srcDose:"10 mg",via:"oral",alts:[{name:"Enalapril",dose:"10 mg",via:"oral"}]}]},
+  {id:"cilazapril",names:["cilazapril","inhibace"],atc:"C09AA",grupo:"IECAs",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Cilazapril",srcDose:"1 mg",via:"oral",alts:[{name:"Enalapril",dose:"5 mg",via:"oral"}]},
+      {srcDrug:"Cilazapril",srcDose:"2,5 mg",via:"oral",alts:[{name:"Enalapril",dose:"10 mg",via:"oral"}]},
+      {srcDrug:"Cilazapril",srcDose:"5 mg",via:"oral",alts:[{name:"Enalapril",dose:"20 mg",via:"oral"}]},
+    ]},
+  {id:"fosinopril",names:["fosinopril","monopril"],atc:"C09AA",grupo:"IECAs",fecha:GFT_DATE,entries:[{srcDrug:"Fosinopril",srcDose:"20 mg",via:"oral",alts:[{name:"Enalapril",dose:"20 mg",via:"oral"}]}]},
+  {id:"imidapril",names:["imidapril","tanatril"],atc:"C09AA",grupo:"IECAs",fecha:GFT_DATE,entries:[{srcDrug:"Imidapril",srcDose:"20 mg",via:"oral",alts:[{name:"Enalapril",dose:"20 mg",via:"oral"}]}]},
+  {id:"lisinopril",names:["lisinopril","zestril","prinivil"],atc:"C09AA",grupo:"IECAs",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Lisinopril",srcDose:"5 mg",via:"oral",alts:[{name:"Enalapril",dose:"5 mg",via:"oral"}]},
+      {srcDrug:"Lisinopril",srcDose:"20 mg",via:"oral",alts:[{name:"Enalapril",dose:"20 mg",via:"oral"}]},
+    ]},
+  {id:"perindopril",names:["perindopril","coversyl","coverex"],atc:"C09AA",grupo:"IECAs",fecha:GFT_DATE,entries:[{srcDrug:"Perindopril",srcDose:"4 mg",via:"oral",alts:[{name:"Enalapril",dose:"10 mg",via:"oral"}]}]},
+  {id:"quinapril",names:["quinapril","accupro"],atc:"C09AA",grupo:"IECAs",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Quinapril",srcDose:"5 mg",via:"oral",alts:[{name:"Enalapril",dose:"5 mg",via:"oral"}]},
+      {srcDrug:"Quinapril",srcDose:"20 mg",via:"oral",alts:[{name:"Enalapril",dose:"10 mg",via:"oral"}]},
+      {srcDrug:"Quinapril",srcDose:"40 mg",via:"oral",alts:[{name:"Enalapril",dose:"20 mg",via:"oral"}]},
+    ]},
+  {id:"ramipril",names:["ramipril","altace","triatec"],atc:"C09AA",grupo:"IECAs",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Ramipril",srcDose:"1,25 mg",via:"oral",alts:[{name:"Enalapril",dose:"2,5 mg",via:"oral"}]},
+      {srcDrug:"Ramipril",srcDose:"2,5 mg",via:"oral",alts:[{name:"Enalapril",dose:"5 mg",via:"oral"}]},
+      {srcDrug:"Ramipril",srcDose:"5 mg",via:"oral",alts:[{name:"Enalapril",dose:"10 mg",via:"oral"}]},
+    ]},
+  {id:"trandolapril",names:["trandolapril","gopten","udrik"],atc:"C09AA",grupo:"IECAs",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Trandolapril",srcDose:"0,5 mg",via:"oral",alts:[{name:"Enalapril",dose:"2,5 mg",via:"oral"}]},
+      {srcDrug:"Trandolapril",srcDose:"2 mg",via:"oral",alts:[{name:"Enalapril",dose:"10 mg",via:"oral"}]},
+    ]},
+  // IECAs combinaciones con diuréticos
+  {id:"benazepril_hctz",names:["benazepril hidroclorotiazida","benazepril/hidroclorotiazida","cibacen diu"],atc:"C09BA",grupo:"IECAs + Diuréticos",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Benazepril/Hidroclorotiazida",srcDose:"10/12,5 mg",via:"oral",alts:[{name:"Enalapril + Hidroclorotiazida",dose:"10 mg (½ comp 20 mg) + 12,5 mg (¼ comp 50 mg)",via:"oral"}]},
+      {srcDrug:"Benazepril/Hidroclorotiazida",srcDose:"20/25 mg",via:"oral",alts:[{name:"Enalapril + Hidroclorotiazida",dose:"20 mg + 25 mg (½ comp 50 mg)",via:"oral"}]},
+    ]},
+  {id:"captopril_hctz",names:["captopril hidroclorotiazida","captopril/hidroclorotiazida"],atc:"C09BA",grupo:"IECAs + Diuréticos",fecha:GFT_DATE,entries:[{srcDrug:"Captopril/Hidroclorotiazida",srcDose:"50/25 mg",via:"oral",alts:[{name:"Enalapril/Hidroclorotiazida",dose:"20/12,5 mg",via:"oral"}]}]},
+  {id:"cilazapril_hctz",names:["cilazapril hidroclorotiazida","cilazapril/hidroclorotiazida"],atc:"C09BA",grupo:"IECAs + Diuréticos",fecha:GFT_DATE,entries:[{srcDrug:"Cilazapril/Hidroclorotiazida",srcDose:"5/12,5 mg",via:"oral",alts:[{name:"Enalapril/Hidroclorotiazida",dose:"20/12,5 mg",via:"oral"}]}]},
+  {id:"fosinopril_hctz",names:["fosinopril hidroclorotiazida","fosinopril/hidroclorotiazida"],atc:"C09BA",grupo:"IECAs + Diuréticos",fecha:GFT_DATE,entries:[{srcDrug:"Fosinopril/Hidroclorotiazida",srcDose:"20/12,5 mg",via:"oral",alts:[{name:"Enalapril/Hidroclorotiazida",dose:"20/12,5 mg",via:"oral"}]}]},
+  {id:"lisinopril_hctz",names:["lisinopril hidroclorotiazida","lisinopril/hidroclorotiazida","zestoretic"],atc:"C09BA",grupo:"IECAs + Diuréticos",fecha:GFT_DATE,entries:[{srcDrug:"Lisinopril/Hidroclorotiazida",srcDose:"20/12,5 mg",via:"oral",alts:[{name:"Enalapril/Hidroclorotiazida",dose:"20/12,5 mg",via:"oral"}]}]},
+  {id:"perindopril_indapamida",names:["perindopril indapamida","perindopril/indapamida","preterax","bipreterax"],atc:"C09BA",grupo:"IECAs + Diuréticos",fecha:GFT_DATE,
+    notes:"Esta combinación NO es intercambiable directamente. Consultar con Farmacia.",
+    entries:[{srcDrug:"Perindopril/Indapamida",srcDose:"2/0,625 mg ó 4/1,25 mg",via:"oral",alts:[{name:"⚠ No intercambiable",dose:"Consultar con el Servicio de Farmacia",via:""}]}]},
+  {id:"quinapril_hctz",names:["quinapril hidroclorotiazida","quinapril/hidroclorotiazida","acuretic"],atc:"C09BA",grupo:"IECAs + Diuréticos",fecha:GFT_DATE,entries:[{srcDrug:"Quinapril/Hidroclorotiazida",srcDose:"20/12,5 mg",via:"oral",alts:[{name:"Enalapril + Hidroclorotiazida",dose:"10 mg (½ comp 20 mg) + 12,5 mg (¼ comp 50 mg)",via:"oral"}]}]},
+  // IECAs + calcioantagonistas
+  {id:"delapril_manidipino",names:["delapril manidipino","delapril/manidipino"],atc:"C09BA",grupo:"IECAs + Calcioantagonistas",fecha:GFT_DATE,entries:[{srcDrug:"Delapril/Manidipino",srcDose:"30/10 mg",via:"oral",alts:[{name:"Enalapril + Amlodipino",dose:"20 mg + 5 mg",via:"oral"}]}]},
+  {id:"enalapril_nitrendipino",names:["enalapril nitrendipino","enalapril/nitrendipino"],atc:"C09BA",grupo:"IECAs + Calcioantagonistas",fecha:GFT_DATE,entries:[{srcDrug:"Enalapril/Nitrendipino",srcDose:"10/20 mg",via:"oral",alts:[{name:"Enalapril + Amlodipino",dose:"10 mg + 10 mg",via:"oral"}]}]},
+  {id:"enalapril_lercanidipino",names:["enalapril lercanidipino","enalapril/lercanidipino","toltec"],atc:"C09BA",grupo:"IECAs + Calcioantagonistas",fecha:GFT_DATE,entries:[{srcDrug:"Enalapril/Lercanidipino",srcDose:"10/10 mg",via:"oral",alts:[{name:"Enalapril + Amlodipino",dose:"10 mg + 5 mg",via:"oral"}]}]},
+  {id:"ramipril_felodipino",names:["ramipril felodipino","ramipril/felodipino","triapin"],atc:"C09BA",grupo:"IECAs + Calcioantagonistas",fecha:GFT_DATE,entries:[{srcDrug:"Ramipril/Felodipino",srcDose:"5/5 mg",via:"oral",alts:[{name:"Enalapril + Amlodipino",dose:"10 mg + 5 mg",via:"oral"}]}]},
+  {id:"trandolapril_verapamilo",names:["trandolapril verapamilo","trandolapril/verapamilo","tarka"],atc:"C09BA",grupo:"IECAs + Calcioantagonistas",fecha:GFT_DATE,entries:[{srcDrug:"Trandolapril/Verapamilo",srcDose:"2/180 mg",via:"oral",alts:[{name:"Enalapril + Verapamilo",dose:"10 mg + 180 mg",via:"oral"}]}]},
+  {id:"perindopril_amlodipino",names:["perindopril amlodipino","perindopril/amlodipino","coveram"],atc:"C09BA",grupo:"IECAs + Calcioantagonistas",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Perindopril/Amlodipino",srcDose:"3,5/2,5 mg",via:"oral",alts:[{name:"Enalapril + Amlodipino",dose:"10 mg + 2,5 mg",via:"oral"}]},
+      {srcDrug:"Perindopril/Amlodipino",srcDose:"7/5 mg",via:"oral",alts:[{name:"Enalapril + Amlodipino",dose:"20 mg + 5 mg",via:"oral"}]},
+    ]},
+  // ARA-II
+  {id:"valsartan",names:["valsartán","valsartan","diovan"],atc:"C09CA",grupo:"ARA-II",fecha:GFT_DATE,
+    notes:"* Uso de Valsartán RESTRINGIDO en GFT a: pacientes adultos con ICC sintomática o disfunción sistólica ventricular izquierda asintomática post-IAM reciente (12h-10 días). NO sustituir en esa indicación. Dosis máx Losartán: 100 mg/24h. Dosis máx Candesartán: 32 mg/24h.",
+    entries:[
+      {srcDrug:"Valsartán *",srcDose:"40 mg",via:"oral",alts:[{name:"Losartán",dose:"25 mg",via:"oral"},{name:"Candesartán",dose:"4 mg",via:"oral"}]},
+      {srcDrug:"Valsartán *",srcDose:"80 mg",via:"oral",alts:[{name:"Losartán",dose:"50 mg",via:"oral"},{name:"Candesartán",dose:"8 mg",via:"oral"}]},
+      {srcDrug:"Valsartán *",srcDose:"160 mg",via:"oral",alts:[{name:"Losartán",dose:"100 mg",via:"oral"},{name:"Candesartán",dose:"16 mg",via:"oral"}]},
+    ]},
+  {id:"eprosartan",names:["eprosartán","eprosartan","teveten"],atc:"C09CA",grupo:"ARA-II",fecha:GFT_DATE,
+    notes:"Dosis máx Losartán: 100 mg/24h. Dosis máx Candesartán: 32 mg/24h.",
+    entries:[{srcDrug:"Eprosartán",srcDose:"600 mg",via:"oral",alts:[{name:"Losartán",dose:"50 mg",via:"oral"},{name:"Candesartán",dose:"8 mg",via:"oral"}]}]},
+  {id:"irbesartan",names:["irbesartán","irbesartan","aprovel","karvea"],atc:"C09CA",grupo:"ARA-II",fecha:GFT_DATE,
+    notes:"Dosis máx Losartán: 100 mg/24h. Dosis máx Candesartán: 32 mg/24h.",
+    entries:[
+      {srcDrug:"Irbesartán",srcDose:"75 mg",via:"oral",alts:[{name:"Losartán",dose:"25 mg",via:"oral"},{name:"Candesartán",dose:"4 mg",via:"oral"}]},
+      {srcDrug:"Irbesartán",srcDose:"150 mg",via:"oral",alts:[{name:"Losartán",dose:"50 mg",via:"oral"},{name:"Candesartán",dose:"8 mg",via:"oral"}]},
+      {srcDrug:"Irbesartán",srcDose:"300 mg",via:"oral",alts:[{name:"Losartán",dose:"100 mg",via:"oral"},{name:"Candesartán",dose:"16 mg",via:"oral"}]},
+    ]},
+  {id:"telmisartan",names:["telmisartán","telmisartan","micardis","kinzalmono"],atc:"C09CA",grupo:"ARA-II",fecha:GFT_DATE,
+    notes:"Dosis máx Losartán: 100 mg/24h. Dosis máx Candesartán: 32 mg/24h.",
+    entries:[
+      {srcDrug:"Telmisartán",srcDose:"40 mg",via:"oral",alts:[{name:"Losartán",dose:"50 mg",via:"oral"},{name:"Candesartán",dose:"8 mg",via:"oral"}]},
+      {srcDrug:"Telmisartán",srcDose:"80 mg",via:"oral",alts:[{name:"Losartán",dose:"100 mg",via:"oral"},{name:"Candesartán",dose:"16 mg",via:"oral"}]},
+    ]},
+  {id:"olmesartan",names:["olmesartán","olmesartan","olmetec","belsar"],atc:"C09CA",grupo:"ARA-II",fecha:GFT_DATE,
+    notes:"Dosis máx Losartán: 100 mg/24h. Dosis máx Candesartán: 32 mg/24h.",
+    entries:[
+      {srcDrug:"Olmesartán",srcDose:"10 mg",via:"oral",alts:[{name:"Losartán",dose:"25 mg",via:"oral"},{name:"Candesartán",dose:"4 mg",via:"oral"}]},
+      {srcDrug:"Olmesartán",srcDose:"20 mg",via:"oral",alts:[{name:"Losartán",dose:"50 mg",via:"oral"},{name:"Candesartán",dose:"8 mg",via:"oral"}]},
+      {srcDrug:"Olmesartán",srcDose:"40 mg",via:"oral",alts:[{name:"Losartán",dose:"100 mg",via:"oral"},{name:"Candesartán",dose:"16 mg",via:"oral"}]},
+    ]},
+  // ARA-II + diuréticos
+  {id:"candesartan_hctz",names:["candesartán hidroclorotiazida","candesartan hidroclorotiazida","candesartán/hidroclorotiazida","candesartan/hidroclorotiazida","atacand plus"],atc:"C09DA",grupo:"ARA-II + Diuréticos",fecha:GFT_DATE,
+    notes:"¹ Combinar especialidades incluidas en GFT: Losartán 50 mg comp, Hidroclorotiazida 50 mg comp (Hidrosaluretil®), Losartán/Hidroclorotiazida 50/12,5 mg comp.",
+    entries:[
+      {srcDrug:"Candesartán/HCT",srcDose:"8/12,5 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida ¹",dose:"50/12,5 mg",via:"oral"}]},
+      {srcDrug:"Candesartán/HCT",srcDose:"16/12,5 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida ¹",dose:"100/12,5 mg",via:"oral"}]},
+      {srcDrug:"Candesartán/HCT",srcDose:"32/25 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida ¹",dose:"100/25 mg",via:"oral"}]},
+    ]},
+  {id:"eprosartan_hctz",names:["eprosartán hidroclorotiazida","eprosartan hidroclorotiazida","eprosartán/hidroclorotiazida","teveten plus"],atc:"C09DA",grupo:"ARA-II + Diuréticos",fecha:GFT_DATE,entries:[{srcDrug:"Eprosartán/HCT",srcDose:"600/12,5 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"50/12,5 mg",via:"oral"}]}]},
+  {id:"irbesartan_hctz",names:["irbesartán hidroclorotiazida","irbesartan hidroclorotiazida","irbesartán/hidroclorotiazida","coaprovel"],atc:"C09DA",grupo:"ARA-II + Diuréticos",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Irbesartán/HCT",srcDose:"150/12,5 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"50/12,5 mg",via:"oral"}]},
+      {srcDrug:"Irbesartán/HCT",srcDose:"300/12,5 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"100/12,5 mg",via:"oral"}]},
+      {srcDrug:"Irbesartán/HCT",srcDose:"300/25 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"100/25 mg",via:"oral"}]},
+    ]},
+  {id:"olmesartan_hctz",names:["olmesartán hidroclorotiazida","olmesartan hidroclorotiazida","olmesartán/hidroclorotiazida","olmetec plus"],atc:"C09DA",grupo:"ARA-II + Diuréticos",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Olmesartán/HCT",srcDose:"20/12,5 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"50/12,5 mg",via:"oral"}]},
+      {srcDrug:"Olmesartán/HCT",srcDose:"20/25 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"50/25 mg",via:"oral"}]},
+      {srcDrug:"Olmesartán/HCT",srcDose:"40/12,5 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"100/12,5 mg",via:"oral"}]},
+      {srcDrug:"Olmesartán/HCT",srcDose:"40/25 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"100/25 mg",via:"oral"}]},
+    ]},
+  {id:"telmisartan_hctz",names:["telmisartán hidroclorotiazida","telmisartan hidroclorotiazida","telmisartán/hidroclorotiazida","micardis plus","kinzalplus"],atc:"C09DA",grupo:"ARA-II + Diuréticos",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Telmisartán/HCT",srcDose:"40/12,5 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"50/12,5 mg",via:"oral"}]},
+      {srcDrug:"Telmisartán/HCT",srcDose:"80/12,5 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"100/12,5 mg",via:"oral"}]},
+      {srcDrug:"Telmisartán/HCT",srcDose:"80/25 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"100/25 mg",via:"oral"}]},
+    ]},
+  {id:"valsartan_hctz",names:["valsartán hidroclorotiazida","valsartan hidroclorotiazida","valsartán/hidroclorotiazida","co-diovan"],atc:"C09DA",grupo:"ARA-II + Diuréticos",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Valsartán/HCT",srcDose:"80/12,5 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"50/12,5 mg",via:"oral"}]},
+      {srcDrug:"Valsartán/HCT",srcDose:"160/12,5 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"100/12,5 mg",via:"oral"}]},
+      {srcDrug:"Valsartán/HCT",srcDose:"320/25 mg",via:"oral",alts:[{name:"Losartán/Hidroclorotiazida",dose:"100/25 mg",via:"oral"}]},
+    ]},
+  // ARA-II + calcioantagonistas
+  {id:"olmesartan_amlodipino",names:["olmesartán amlodipino","olmesartan amlodipino","olmesartán/amlodipino","sevikar"],atc:"C09DB",grupo:"ARA-II + Calcioantagonistas",fecha:GFT_DATE,
+    notes:"¹ Combinar Losartán 50 mg comp + Amlodipino 5 ó 10 mg comp (incluidos en GFT).",
+    entries:[
+      {srcDrug:"Olmesartán/Amlodipino",srcDose:"20/5 mg",via:"oral",alts:[{name:"Losartán/Amlodipino ¹",dose:"80/5 mg",via:"oral"}]},
+      {srcDrug:"Olmesartán/Amlodipino",srcDose:"20/10 mg",via:"oral",alts:[{name:"Losartán/Amlodipino ¹",dose:"80/10 mg",via:"oral"}]},
+    ]},
+  {id:"telmisartan_amlodipino",names:["telmisartán amlodipino","telmisartan amlodipino","telmisartán/amlodipino","twynsta"],atc:"C09DB",grupo:"ARA-II + Calcioantagonistas",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Telmisartán/Amlodipino",srcDose:"80/5 mg",via:"oral",alts:[{name:"Losartán/Amlodipino",dose:"100/5 mg",via:"oral"}]},
+      {srcDrug:"Telmisartán/Amlodipino",srcDose:"80/10 mg",via:"oral",alts:[{name:"Losartán/Amlodipino",dose:"100/10 mg",via:"oral"}]},
+    ]},
+  {id:"valsartan_amlodipino",names:["valsartán amlodipino","valsartan amlodipino","valsartán/amlodipino","exforge"],atc:"C09DB",grupo:"ARA-II + Calcioantagonistas",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Valsartán/Amlodipino",srcDose:"80/5 mg",via:"oral",alts:[{name:"Losartán/Amlodipino",dose:"80/5 mg",via:"oral"}]},
+      {srcDrug:"Valsartán/Amlodipino",srcDose:"80/10 mg",via:"oral",alts:[{name:"Losartán/Amlodipino",dose:"80/10 mg",via:"oral"}]},
+      {srcDrug:"Valsartán/Amlodipino",srcDose:"160/5 mg",via:"oral",alts:[{name:"Losartán/Amlodipino",dose:"100/5 mg",via:"oral"}]},
+      {srcDrug:"Valsartán/Amlodipino",srcDose:"160/10 mg",via:"oral",alts:[{name:"Losartán/Amlodipino",dose:"100/10 mg",via:"oral"}]},
+    ]},
+  // Estatinas
+  {id:"fluvastatina",names:["fluvastatina","lescol"],atc:"C10AA",grupo:"Hipolipemiantes – Estatinas",fecha:GFT_DATE,
+    notes:"¹ Si ClCr<30 ml/min: no superar Simvastatina 10 mg/24h. ² Mínima dosis de Atorvastatina disponible en Farmacia. ³ Pravastatina: uso restringido (ver ficha Pravastatina en GFT).",
+    entries:[
+      {srcDrug:"Fluvastatina",srcDose:"40 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"10 mg",via:"oral"},{name:"Atorvastatina ²",dose:"10 mg",via:"oral"},{name:"Pravastatina ³",dose:"20 mg",via:"oral"}]},
+      {srcDrug:"Fluvastatina",srcDose:"80 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"20 mg",via:"oral"},{name:"Atorvastatina",dose:"10 mg",via:"oral"},{name:"Pravastatina ³",dose:"40 mg",via:"oral"}]},
+    ]},
+  {id:"lovastatina",names:["lovastatina","mevacor"],atc:"C10AA",grupo:"Hipolipemiantes – Estatinas",fecha:GFT_DATE,
+    notes:"¹ Si ClCr<30 ml/min: no superar Simvastatina 10 mg/24h. ² Mínima dosis de Atorvastatina disponible. ³ Pravastatina: uso restringido.",
+    entries:[
+      {srcDrug:"Lovastatina",srcDose:"20 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"10 mg",via:"oral"},{name:"Atorvastatina ²",dose:"10 mg",via:"oral"},{name:"Pravastatina ³",dose:"20 mg",via:"oral"}]},
+      {srcDrug:"Lovastatina",srcDose:"40 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"20 mg",via:"oral"},{name:"Atorvastatina",dose:"10 mg",via:"oral"},{name:"Pravastatina ³",dose:"40 mg",via:"oral"}]},
+      {srcDrug:"Lovastatina",srcDose:"80 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"40 mg",via:"oral"},{name:"Atorvastatina",dose:"10 mg",via:"oral"},{name:"Pravastatina ³",dose:"40 mg",via:"oral"}]},
+    ]},
+  {id:"pitavastatina",names:["pitavastatina","livazo"],atc:"C10AA",grupo:"Hipolipemiantes – Estatinas",fecha:GFT_DATE,
+    notes:"¹ Si ClCr<30 ml/min: no superar Simvastatina 10 mg/24h. ² Mínima dosis de Atorvastatina disponible. ³ Pravastatina: uso restringido.",
+    entries:[
+      {srcDrug:"Pitavastatina",srcDose:"1 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"10 mg",via:"oral"},{name:"Atorvastatina ²",dose:"10 mg",via:"oral"},{name:"Pravastatina ³",dose:"20 mg",via:"oral"}]},
+      {srcDrug:"Pitavastatina",srcDose:"2 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"20 mg",via:"oral"},{name:"Atorvastatina",dose:"10 mg",via:"oral"},{name:"Pravastatina ³",dose:"40 mg",via:"oral"}]},
+      {srcDrug:"Pitavastatina",srcDose:"4 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"40 mg",via:"oral"},{name:"Atorvastatina",dose:"20 mg",via:"oral"},{name:"Pravastatina ³",dose:"80 mg",via:"oral"}]},
+      {srcDrug:"Pitavastatina",srcDose:"8 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"80 mg",via:"oral"},{name:"Atorvastatina",dose:"40 mg",via:"oral"}]},
+    ]},
+  {id:"rosuvastatina",names:["rosuvastatina","crestor","provisacor"],atc:"C10AA",grupo:"Hipolipemiantes – Estatinas",fecha:GFT_DATE,
+    notes:"¹ Si ClCr<30 ml/min: no superar Simvastatina 10 mg/24h. ³ Pravastatina: uso restringido a posaconazol, inhibidores de la proteasa, ciclosporina, claritromicina o eritromicina. En ancianos, IR e IH: inicio 10 mg/24h.",
+    entries:[
+      {srcDrug:"Rosuvastatina",srcDose:"5 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"20 mg",via:"oral"},{name:"Atorvastatina",dose:"10 mg",via:"oral"},{name:"Pravastatina ³",dose:"40 mg",via:"oral"}]},
+      {srcDrug:"Rosuvastatina",srcDose:"10 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"40 mg",via:"oral"},{name:"Atorvastatina",dose:"20 mg",via:"oral"},{name:"Pravastatina ³",dose:"80 mg",via:"oral"}]},
+      {srcDrug:"Rosuvastatina",srcDose:"20 mg",via:"oral",alts:[{name:"Simvastatina ¹",dose:"80 mg",via:"oral"},{name:"Atorvastatina",dose:"40 mg",via:"oral"}]},
+      {srcDrug:"Rosuvastatina",srcDose:"40 mg",via:"oral",alts:[{name:"Atorvastatina",dose:"80 mg",via:"oral"}]},
+    ]},
+  {id:"bezafibrato",names:["bezafibrato","eulitop"],atc:"C10AB",grupo:"Hipolipemiantes – Fibratos",fecha:GFT_DATE,
+    notes:"Existen diferentes presentaciones de Fenofibrato, todas intercambiables entre sí: 100 mg/8h cáps, 160 mg/24h comp, 200 mg/24h micronizado, 250 mg/24h retard, 145 mg/24h comp recubiertos.",
+    entries:[
+      {srcDrug:"Bezafibrato",srcDose:"200 mg / 8h",via:"oral",alts:[{name:"Fenofibrato",dose:"160 mg / 24h",via:"oral"}]},
+      {srcDrug:"Bezafibrato",srcDose:"400 mg / 24h",via:"oral",alts:[{name:"Fenofibrato",dose:"160 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"gemfibrozilo",names:["gemfibrozilo","lopid"],atc:"C10AB",grupo:"Hipolipemiantes – Fibratos",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Gemfibrozilo",srcDose:"600 mg / 12h",via:"oral",alts:[{name:"Fenofibrato",dose:"160 mg / 24h",via:"oral"}]},
+      {srcDrug:"Gemfibrozilo",srcDose:"900 mg / 24h",via:"oral",alts:[{name:"Fenofibrato",dose:"160 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"colestiramina",names:["colestiramina","questran"],atc:"C10AC",grupo:"Hipolipemiantes – Secuestrantes sales biliares",fecha:GFT_DATE,
+    notes:"¹ Colestiramina: dosis habitual 8-24 g en 1 o varias tomas; nunca en seco (disolver en ≥150 ml líquido); máx 32 g/24h en 4 tomas. ² Colestipol: dosis habitual 5 g/12-24h; máx 30 g/día en 3 tomas.",
+    entries:[
+      {srcDrug:"Colestiramina ¹",srcDose:"3 g (1 sobre)",via:"oral",alts:[{name:"Colestipol ²",dose:"5 g (1 sobre)",via:"oral"}]},
+      {srcDrug:"Colestiramina ¹",srcDose:"5 g (1 sobre)",via:"oral",alts:[{name:"Colestipol ²",dose:"5 g (1 sobre)",via:"oral"}]},
+    ]},
+
+  // ══ GRUPO G ══
+  {id:"ketoconazol_vag",names:["ketoconazol vaginal"],atc:"G01AF",grupo:"Antifúngicos genitourinarios",fecha:GFT_DATE,entries:[{srcDrug:"Ketoconazol",srcDose:"400 mg óvulos vaginales",via:"vaginal",alts:[{name:"Clotrimazol",dose:"500 mg comp. vaginal – dosis única",via:"vaginal"}]}]},
+  {id:"fenticonazol",names:["fenticonazol"],atc:"G01AF",grupo:"Antifúngicos genitourinarios",fecha:GFT_DATE,entries:[{srcDrug:"Fenticonazol",srcDose:"600 mg óvulos vaginales",via:"vaginal",alts:[{name:"Clotrimazol",dose:"500 mg comp. vaginal – dosis única",via:"vaginal"}]}]},
+  {id:"sertaconazol_vag",names:["sertaconazol vaginal","sertaconazol óvulos"],atc:"G01AF",grupo:"Antifúngicos genitourinarios",fecha:GFT_DATE,entries:[{srcDrug:"Sertaconazol",srcDose:"500 mg óvulos vaginales",via:"vaginal",alts:[{name:"Clotrimazol",dose:"500 mg comp. vaginal – dosis única",via:"vaginal"}]}]},
+  {id:"miconazol_vag",names:["miconazol crema vaginal","gyno-daktarin"],atc:"G01AF",grupo:"Antifúngicos genitourinarios",fecha:GFT_DATE,entries:[{srcDrug:"Miconazol",srcDose:"20 mg/g crema vaginal",via:"vaginal",alts:[{name:"Clotrimazol",dose:"20 mg/g crema vaginal",via:"vaginal"},{name:"Sertaconazol",dose:"20 mg/g crema vaginal",via:"vaginal"}]}]},
+  {id:"ciclopirox_vag",names:["ciclopirox vaginal"],atc:"G01AX",grupo:"Antifúngicos genitourinarios",fecha:GFT_DATE,entries:[{srcDrug:"Ciclopirox",srcDose:"10 mg/g crema vaginal",via:"vaginal",alts:[{name:"Clotrimazol",dose:"20 mg/g crema vaginal",via:"vaginal"}]}]},
+  {id:"quinagolida",names:["quinagolida","norprolac"],atc:"G02CB",grupo:"Inhibidores de prolactina",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Quinagolida",srcDose:"25 mcg",via:"oral",alts:[{name:"Cabergolina",dose:"0,5 mg",via:"oral"}]},
+      {srcDrug:"Quinagolida",srcDose:"75 mcg",via:"oral",alts:[{name:"Cabergolina",dose:"1 mg – dosis única",via:"oral"}]},
+    ]},
+  {id:"solifenacina",names:["solifenacina","vesicare"],atc:"G04BD",grupo:"Antiespasmódicos urinarios",fecha:GFT_DATE,
+    notes:"¹ Comprimidos de liberación modificada. En SNG: Oxibutinina oral 5 mg/8h.",
+    entries:[{srcDrug:"Solifenacina",srcDose:"5-10 mg / 24h",via:"oral",alts:[{name:"Tolterodina ¹",dose:"4 mg / 24h",via:"oral"},{name:"Oxibutinina",dose:"5 mg / 8h",via:"oral"}]}]},
+  {id:"fesoterodina",names:["fesoterodina","toviaz"],atc:"G04BD",grupo:"Antiespasmódicos urinarios",fecha:GFT_DATE,entries:[{srcDrug:"Fesoterodina",srcDose:"4-8 mg / 24h",via:"oral",alts:[{name:"Tolterodina",dose:"4 mg / 24h",via:"oral"},{name:"Oxibutinina",dose:"5 mg / 8h",via:"oral"}]}]},
+  {id:"desfesoterodina",names:["desfesoterodina"],atc:"G04BD",grupo:"Antiespasmódicos urinarios",fecha:GFT_DATE,entries:[{srcDrug:"Desfesoterodina",srcDose:"3,5-7 mg / 24h",via:"oral",alts:[{name:"Tolterodina",dose:"4 mg / 24h",via:"oral"}]}]},
+  {id:"trospio",names:["trospio","uraplex"],atc:"G04BD",grupo:"Antiespasmódicos urinarios",fecha:GFT_DATE,entries:[{srcDrug:"Trospio cloruro",srcDose:"20 mg / 12h",via:"oral",alts:[{name:"Tolterodina",dose:"4 mg / 24h",via:"oral"}]}]},
+  {id:"oxibutinina_td",names:["oxibutinina transdérmica","oxibutinina parche","kentera"],atc:"G04BD",grupo:"Antiespasmódicos urinarios",fecha:GFT_DATE,entries:[{srcDrug:"Oxibutinina transdérmica",srcDose:"1 parche / 3-4 días",via:"transdérmica",alts:[{name:"Tolterodina",dose:"4 mg / 24h",via:"oral"}]}]},
+  {id:"propiverina",names:["propiverina","mictonorm"],atc:"G04BD",grupo:"Antiespasmódicos urinarios",fecha:GFT_DATE,entries:[{srcDrug:"Propiverina",srcDose:"30 mg / 24h",via:"oral",alts:[{name:"Tolterodina",dose:"4 mg / 24h",via:"oral"}]}]},
+  {id:"terazosina",names:["terazosina","urocar"],atc:"G04CA",grupo:"Alfa-bloqueantes urinarios",fecha:GFT_DATE,
+    notes:"¹ Dosis máx Terazosina: 10 mg/24h. ² Dosis máx Tamsulosina: 0,8 mg/24h. ³ Doxazosina lib. modificada: en SNG usar lib. normal 2 mg/12h; máx 8 mg/24h.",
+    entries:[{srcDrug:"Terazosina ¹",srcDose:"5 mg / 24h",via:"oral",alts:[{name:"Tamsulosina ²",dose:"0,4 mg / 24h",via:"oral"}]}]},
+  {id:"alfuzosina",names:["alfuzosina","alfuzosina retard","xatral"],atc:"G04CA",grupo:"Alfa-bloqueantes urinarios",fecha:GFT_DATE,
+    notes:"³ Doxazosina lib. modificada: en SNG usar lib. normal 2 mg/12h; máx 8 mg/24h.",
+    entries:[
+      {srcDrug:"Alfuzosina",srcDose:"2,5 mg / 8h",via:"oral",alts:[{name:"Doxazosina ³",dose:"4 mg / 24h",via:"oral"}]},
+      {srcDrug:"Alfuzosina retard",srcDose:"5 mg / 12h ó 10 mg / 24h",via:"oral",alts:[{name:"Doxazosina ³",dose:"4 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"silodosina",names:["silodosina","urorec"],atc:"G04CA",grupo:"Alfa-bloqueantes urinarios",fecha:GFT_DATE,entries:[{srcDrug:"Silodosina",srcDose:"4-8 mg / 24h",via:"oral",alts:[{name:"Doxazosina",dose:"4 mg / 24h",via:"oral"}]}]},
+  {id:"dutasterida",names:["dutasterida","avodart"],atc:"G04CB",grupo:"Inhibidores 5-alfa reductasa",fecha:GFT_DATE,entries:[{srcDrug:"Dutasterida",srcDose:"0,5 mg / 24h",via:"oral",alts:[{name:"Finasterida",dose:"5 mg / 24h",via:"oral"}]}]},
+
+  // ══ GRUPO H ══
+  {id:"carbimazol",names:["carbimazol","neo-mercazole"],atc:"H03BB",grupo:"Antitiroideos",fecha:GFT_DATE,entries:[{srcDrug:"Carbimazol",srcDose:"5 mg (dosis usual)",via:"oral",alts:[{name:"Tiamazol",dose:"5 mg (dosis usual)",via:"oral"}]}]},
+
+  // ══ GRUPO J ══
+  {id:"ampicilina_oral",names:["ampicilina oral"],atc:"J01CA",grupo:"Penicilinas espectro amplio – oral",fecha:GFT_DATE,entries:[{srcDrug:"Ampicilina",srcDose:"500 mg / 6h",via:"oral",alts:[{name:"Amoxicilina",dose:"500 mg / 8h",via:"oral"}]}]},
+  {id:"cefaclor",names:["cefaclor","ceclor"],atc:"J01D",grupo:"Cefalosporinas",fecha:GFT_DATE,entries:[{srcDrug:"Cefaclor",srcDose:"250-500 mg / 8h",via:"oral",alts:[{name:"Cefuroxima",dose:"500 mg / 12h",via:"oral"}]}]},
+  {id:"claritromicina_iv",names:["claritromicina iv","claritromicina intravenosa"],atc:"J01FA",grupo:"Macrólidos",fecha:GFT_DATE,
+    notes:"Azitromicina iv: administrar en infusión (1 mg/ml durante 3h ó 2 mg/ml durante 1h). NO en bolus ni vía im.",
+    entries:[{srcDrug:"Claritromicina",srcDose:"500 mg / 12h",via:"iv",alts:[{name:"Azitromicina",dose:"500 mg / 24h",via:"iv"}]}]},
+  {id:"ofloxacino",names:["ofloxacino","tarivid"],atc:"J01MA",grupo:"Quinolonas",fecha:GFT_DATE,entries:[{srcDrug:"Ofloxacino",srcDose:"200 mg / 12h",via:"oral",alts:[{name:"Ciprofloxacino",dose:"250-750 mg / 12h",via:"oral"},{name:"Levofloxacino",dose:"500 mg / 24h",via:"oral"}]}]},
+  {id:"moxifloxacino",names:["moxifloxacino","avelox"],atc:"J01MA",grupo:"Quinolonas",fecha:GFT_DATE,
+    notes:"¹ En infección de piel y partes blandas: valorar asociar clindamicina.",
+    entries:[{srcDrug:"Moxifloxacino",srcDose:"400 mg / 24h",via:"oral",alts:[{name:"Ciprofloxacino",dose:"250-750 mg / 12h",via:"oral"},{name:"Levofloxacino ¹",dose:"500 mg / 24h",via:"oral"}]}]},
+
+  // ══ GRUPO M ══
+  {id:"aceclofenaco",names:["aceclofenaco","airtal","biofenac"],atc:"M01AB",grupo:"AINEs – Ácido acético",fecha:GFT_DATE,entries:[{srcDrug:"Aceclofenaco",srcDose:"100 mg / 12h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8-12h",via:"oral"}]}]},
+  {id:"diclofenaco_retard",names:["diclofenaco retard","voltaren retard"],atc:"M01AB",grupo:"AINEs – Ácido acético",fecha:GFT_DATE,entries:[{srcDrug:"Diclofenaco retard",srcDose:"75 mg / 12h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8-12h",via:"oral"}]}]},
+  {id:"ketorolaco_oral",names:["ketorolaco oral"],atc:"M01AB",grupo:"AINEs – Ácido acético",fecha:GFT_DATE,entries:[{srcDrug:"Ketorolaco",srcDose:"100 mg / 8h",via:"oral",alts:[{name:"Ibuprofeno",dose:"600 mg / 8h",via:"oral"}]}]},
+  {id:"ketorolaco_iv",names:["ketorolaco iv","ketorolaco im","ketorolaco parenteral"],atc:"M01AB",grupo:"AINEs – Ácido acético parenteral",fecha:GFT_DATE,
+    notes:"¹ Ketorolaco 30 mg amp disponible para Unidad de Cuidados Paliativos (petición individualizada). ² Dexketoprofeno iv: no prolongar más de 48h.",
+    entries:[{srcDrug:"Ketorolaco ¹",srcDose:"30 mg / 12h",via:"iv/im",alts:[{name:"Dexketoprofeno ²",dose:"50 mg / 8-12h (máx 48h)",via:"iv/im"}]}]},
+  {id:"piroxicam",names:["piroxicam","feldene"],atc:"M01AC",grupo:"AINEs – Oxicams",fecha:GFT_DATE,entries:[{srcDrug:"Piroxicam",srcDose:"20 mg / 24h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8-12h",via:"oral"}]}]},
+  {id:"lornoxicam",names:["lornoxicam","xefo"],atc:"M01AC",grupo:"AINEs – Oxicams",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Lornoxicam",srcDose:"4 mg / 8-12h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8-12h",via:"oral"}]},
+      {srcDrug:"Lornoxicam",srcDose:"8 mg / 12-24h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8-12h",via:"oral"}]},
+    ]},
+  {id:"meloxicam",names:["meloxicam","movalis","mobic"],atc:"M01AC",grupo:"AINEs – Oxicams",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Meloxicam",srcDose:"7,5 mg / 24h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8-12h",via:"oral"}]},
+      {srcDrug:"Meloxicam",srcDose:"15 mg / 24h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8-12h",via:"oral"}]},
+    ]},
+  {id:"tenoxicam",names:["tenoxicam","reutenox"],atc:"M01AC",grupo:"AINEs – Oxicams",fecha:GFT_DATE,entries:[{srcDrug:"Tenoxicam",srcDose:"20 mg / 24h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8-12h",via:"oral"}]}]},
+  {id:"dexibuprofeno",names:["dexibuprofeno","seractil"],atc:"M01AE",grupo:"AINEs – Ácido propiónico",fecha:GFT_DATE,entries:[{srcDrug:"Dexibuprofeno",srcDose:"400 mg / 8h",via:"oral",alts:[{name:"Ibuprofeno",dose:"600 mg / 8h",via:"oral"}]}]},
+  {id:"flurbiprofeno",names:["flurbiprofeno","froben"],atc:"M01AE",grupo:"AINEs – Ácido propiónico",fecha:GFT_DATE,entries:[{srcDrug:"Flurbiprofeno (Froben®)",srcDose:"50 mg / 8h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8-12h",via:"oral"},{name:"Ibuprofeno",dose:"600 mg / 8h",via:"oral"}]}]},
+  {id:"ketoprofeno_oral",names:["ketoprofeno oral"],atc:"M01AE",grupo:"AINEs – Ácido propiónico",fecha:GFT_DATE,
+    entries:[
+      {srcDrug:"Ketoprofeno",srcDose:"50 mg / 8h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8-12h",via:"oral"}]},
+      {srcDrug:"Ketoprofeno",srcDose:"200 mg / 24h",via:"oral",alts:[{name:"Diclofenaco",dose:"100 mg / 12-24h",via:"oral"}]},
+    ]},
+  {id:"ketoprofeno_iv",names:["ketoprofeno iv","ketoprofeno parenteral"],atc:"M01AE",grupo:"AINEs – Ácido propiónico parenteral",fecha:GFT_DATE,
+    notes:"Dexketoprofeno iv: no prolongar más de 48h.",
+    entries:[{srcDrug:"Ketoprofeno",srcDose:"100 mg / 8h",via:"iv",alts:[{name:"Dexketoprofeno",dose:"50 mg / 8h (máx 48h)",via:"iv"}]}]},
+  {id:"mefenamico",names:["ácido mefenámico","acido mefenamico"],atc:"M01AG",grupo:"AINEs – Fenamatos",fecha:GFT_DATE,entries:[{srcDrug:"Ácido mefenámico",srcDose:"250 mg / 8h",via:"oral",alts:[{name:"Ibuprofeno",dose:"600 mg / 8h",via:"oral"}]}]},
+  {id:"celecoxib",names:["celecoxib","celebrex"],atc:"M01AH",grupo:"AINEs – Coxibs",fecha:GFT_DATE,entries:[{srcDrug:"Celecoxib",srcDose:"200 mg / 12-24h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8h",via:"oral"}]}]},
+  {id:"etoricoxib",names:["etoricoxib","arcoxia"],atc:"M01AH",grupo:"AINEs – Coxibs",fecha:GFT_DATE,
+    notes:"¹ Artrosis. ² Artritis reumatoide. ³ Artritis gotosa aguda (máx 8 días de tratamiento).",
+    entries:[
+      {indicacion:"Artrosis ¹",srcDrug:"Etoricoxib",srcDose:"30-60 mg / 24h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 24-12h",via:"oral"}]},
+      {indicacion:"Artritis reumatoide ²",srcDrug:"Etoricoxib",srcDose:"90 mg / 12h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 8h",via:"oral"}]},
+      {indicacion:"Artritis gotosa aguda ³",srcDrug:"Etoricoxib",srcDose:"120 mg / 24h",via:"oral",alts:[{name:"Diclofenaco",dose:"50 mg / 6h",via:"oral"}]},
+    ]},
+  {id:"parecoxib",names:["parecoxib","dynastat"],atc:"M01AH",grupo:"AINEs – Coxibs parenteral",fecha:GFT_DATE,
+    notes:"Dexketoprofeno iv: no prolongar más de 48h.",
+    entries:[{srcDrug:"Parecoxib",srcDose:"40 mg / 12h",via:"iv/im",alts:[{name:"Dexketoprofeno",dose:"50 mg / 8-12h (máx 48h)",via:"iv"}]}]},
+  {id:"colchicina",names:["colchicina"],atc:"M04AC",grupo:"Antigotosos",fecha:GFT_DATE,
+    notes:"Posología gota aguda: inicio 1 mg; no más de 2 mg/24h; no superar 6 mg acumulados en 4 días; no continuar más de 4 días. Ajuste en IR moderada (ClCr 31-50 ml/min). Contraindicado ClCr<30 ml/min. Evitar con: macrólidos, ketoconazol, itraconazol, fluconazol, inhibidores de la proteasa, verapamilo, diltiazem, ciclosporina.",
+    entries:[{srcDrug:"Colchicina (sola)",srcDose:"1 mg",via:"oral",alts:[{name:"Colchicina/Dicicloverina (Colchimax®)",dose:"0,5/5 mg",via:"oral"}]}]},
+
+  // ══ GRUPO N ══
+  {id:"buprenorfina_35",names:["buprenorfina transdérmica 35mcg","buprenorfina 35mcg/h","buprenorfina parche 35","transtec 35"],atc:"N02A",grupo:"Opioides",fecha:GFT_DATE,noDirecta:true,
+    notes:"¹ NO administrar otro opioide en las 24h posteriores a la retirada del parche.",
+    entries:[{srcDrug:"Buprenorfina transdérmica ¹",srcDose:"35 mcg/h · 1 parche / 72h",via:"transdérmica",alts:[
+      {name:"Fentanilo transdérmico",dose:"25 mcg/h · 1 parche / 72h",via:"transdérmica"},
+      {name:"Tramadol",dose:"300 mg / día",via:"oral"},
+      {name:"Tramadol",dose:"200 mg / día",via:"iv"},
+      {name:"Morfina",dose:"60 mg / día",via:"oral"},
+      {name:"Morfina",dose:"30 mg / día",via:"subcutánea"},
+      {name:"Morfina",dose:"20 mg / día",via:"iv"},
+    ]}]},
+  {id:"buprenorfina_525",names:["buprenorfina transdérmica 52.5mcg","buprenorfina 52,5mcg/h","buprenorfina parche 52,5","transtec 52,5"],atc:"N02A",grupo:"Opioides",fecha:GFT_DATE,noDirecta:true,
+    notes:"¹ NO administrar otro opioide en las 24h posteriores a la retirada del parche.",
+    entries:[{srcDrug:"Buprenorfina transdérmica ¹",srcDose:"52,5 mcg/h · 1 parche / 72h",via:"transdérmica",alts:[
+      {name:"Fentanilo transdérmico",dose:"37,5 mcg/h · 1 parche / 72h",via:"transdérmica"},
+      {name:"Tramadol",dose:"450 mg / día",via:"oral"},
+      {name:"Tramadol",dose:"300 mg / día",via:"iv"},
+      {name:"Morfina",dose:"90 mg / día",via:"oral"},
+      {name:"Morfina",dose:"45 mg / día",via:"subcutánea"},
+      {name:"Morfina",dose:"30 mg / día",via:"iv"},
+    ]}]},
+  {id:"buprenorfina_70",names:["buprenorfina transdérmica 70mcg","buprenorfina 70mcg/h","buprenorfina parche 70","transtec 70"],atc:"N02A",grupo:"Opioides",fecha:GFT_DATE,noDirecta:true,
+    notes:"¹ NO administrar otro opioide en las 24h posteriores a la retirada del parche. ² Dosis máxima de tramadol.",
+    entries:[{srcDrug:"Buprenorfina transdérmica ¹",srcDose:"70 mcg/h · 1 parche / 72h",via:"transdérmica",alts:[
+      {name:"Fentanilo transdérmico",dose:"50 mcg/h · 1 parche / 72h",via:"transdérmica"},
+      {name:"Tramadol ² (dosis máxima)",dose:"600 mg / día",via:"oral"},
+      {name:"Tramadol ² (dosis máxima)",dose:"400 mg / día",via:"iv"},
+      {name:"Morfina",dose:"120 mg / día",via:"oral"},
+      {name:"Morfina",dose:"60 mg / día",via:"subcutánea"},
+      {name:"Morfina",dose:"40 mg / día",via:"iv"},
+    ]}]},
+  {id:"hidromorfona",names:["hidromorfona","jurnista","palladone"],atc:"N02A",grupo:"Opioides",fecha:GFT_DATE,noDirecta:true,
+    notes:"NO susceptible de sustitución directa.",
+    entries:[
+      {srcDrug:"Hidromorfona",srcDose:"4 mg / 24h",via:"oral",alts:[{name:"Morfina (MST®)",dose:"10 mg / 12h",via:"oral"},{name:"Oxicodona (Oxycontin®)",dose:"10 mg / 24h",via:"oral"}]},
+      {srcDrug:"Hidromorfona",srcDose:"8 mg / 24h",via:"oral",alts:[{name:"Morfina (MST®)",dose:"20 mg / 12h",via:"oral"},{name:"Oxicodona (Oxycontin®)",dose:"20 mg / 24h",via:"oral"}]},
+      {srcDrug:"Hidromorfona",srcDose:"16 mg / 24h",via:"oral",alts:[{name:"Morfina (MST®)",dose:"40 mg / 12h",via:"oral"},{name:"Oxicodona (Oxycontin®)",dose:"40 mg / 24h",via:"oral"}]},
+      {srcDrug:"Hidromorfona",srcDose:"32 mg / 24h",via:"oral",alts:[{name:"Morfina (MST®)",dose:"80 mg / 12h",via:"oral"},{name:"Oxicodona (Oxycontin®)",dose:"80 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"oxicodona_naloxona",names:["oxicodona naloxona","oxicodona/naloxona","targin"],atc:"N02A",grupo:"Opioides",fecha:GFT_DATE,noDirecta:true,
+    notes:"Añadir LACTULOSA al sustituir por morfina u oxicodona sin naloxona (gestión de la constipación).",
+    entries:[
+      {srcDrug:"Oxicodona/Naloxona (Targin®)",srcDose:"5/2,5 mg",via:"oral",alts:[{name:"Morfina (MST®) + Lactulosa",dose:"10 mg / 12h + lactulosa",via:"oral"},{name:"Oxicodona (Oxycontin®) + Lactulosa",dose:"10 mg / 24h + lactulosa",via:"oral"}]},
+      {srcDrug:"Oxicodona/Naloxona (Targin®)",srcDose:"10/5 mg",via:"oral",alts:[{name:"Morfina (MST®) + Lactulosa",dose:"20 mg / 12h + lactulosa",via:"oral"},{name:"Oxicodona (Oxycontin®) + Lactulosa",dose:"20 mg / 24h + lactulosa",via:"oral"}]},
+      {srcDrug:"Oxicodona/Naloxona (Targin®)",srcDose:"20/10 mg",via:"oral",alts:[{name:"Morfina (MST®) + Lactulosa",dose:"40 mg / 12h + lactulosa",via:"oral"},{name:"Oxicodona (Oxycontin®) + Lactulosa",dose:"40 mg / 24h + lactulosa",via:"oral"}]},
+      {srcDrug:"Oxicodona/Naloxona (Targin®)",srcDose:"40/20 mg",via:"oral",alts:[{name:"Morfina (MST®) + Lactulosa",dose:"80 mg / 12h + lactulosa",via:"oral"},{name:"Oxicodona (Oxycontin®) + Lactulosa",dose:"80 mg / 24h + lactulosa",via:"oral"}]},
+    ]},
+  {id:"tapentadol",names:["tapentadol","palexia"],atc:"N02A",grupo:"Opioides",fecha:GFT_DATE,noDirecta:true,
+    notes:"Equivalencias orientativas. Ver también: SEFH-GENESIS Tapentadol 2012.",
+    entries:[
+      {srcDrug:"Tapentadol",srcDose:"100 mg / 24h",via:"oral",alts:[{name:"Morfina (MST®)",dose:"40 mg / 24h",via:"oral"},{name:"Oxicodona (Oxycontin®)",dose:"20 mg / 24h",via:"oral"}]},
+      {srcDrug:"Tapentadol",srcDose:"200 mg / 24h",via:"oral",alts:[{name:"Morfina (MST®)",dose:"80 mg / 24h",via:"oral"},{name:"Oxicodona (Oxycontin®)",dose:"40 mg / 24h",via:"oral"}]},
+      {srcDrug:"Tapentadol",srcDose:"300 mg / 24h",via:"oral",alts:[{name:"Morfina (MST®)",dose:"120 mg / 24h",via:"oral"},{name:"Oxicodona (Oxycontin®)",dose:"60 mg / 24h",via:"oral"}]},
+      {srcDrug:"Tapentadol",srcDose:"400 mg / 24h",via:"oral",alts:[{name:"Morfina (MST®)",dose:"160 mg / 24h",via:"oral"},{name:"Oxicodona (Oxycontin®)",dose:"80 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"selegilina",names:["selegilina","plurimen"],atc:"N04BD",grupo:"Dopaminérgicos – Inhibidores MAO-B",fecha:GFT_DATE,entries:[{srcDrug:"Selegilina",srcDose:"10 mg / 24h",via:"oral",alts:[{name:"Rasagilina",dose:"1 mg / 24h",via:"oral"}]}]},
+  {id:"paliperidona",names:["paliperidona","invega"],atc:"N05AX",grupo:"Antipsicóticos",fecha:GFT_DATE,
+    notes:"¹ Paliperidona – Indicación: esquizofrenia. En IR: ClCr 30-80 ml/min → 3 mg/24h; ClCr 10-30 ml/min → 3 mg/48h; ClCr<10 ml/min → no recomendado. Intervalo recomendado: 3-12 mg. ² Risperidona – Inicio: 2 mg día 1, 4 mg día 2, 6 mg día 3. En IR/IH: 0,5 mg/12h. Ancianos: 0,5 mg/12h. Dosis máx 16 mg/24h.",
+    entries:[
+      {srcDrug:"Paliperidona ¹",srcDose:"3 mg / 24h",via:"oral",alts:[{name:"Risperidona ²",dose:"1 mg / 24h",via:"oral"}]},
+      {srcDrug:"Paliperidona ¹",srcDose:"6 mg / 24h",via:"oral",alts:[{name:"Risperidona ²",dose:"2 mg / 24h",via:"oral"}]},
+      {srcDrug:"Paliperidona ¹",srcDose:"9 mg / 24h",via:"oral",alts:[{name:"Risperidona ²",dose:"4 mg / 24h",via:"oral"}]},
+      {srcDrug:"Paliperidona ¹",srcDose:"12 mg / 24h",via:"oral",alts:[{name:"Risperidona ²",dose:"5 mg / 24h",via:"oral"}]},
+      {srcDrug:"Paliperidona ¹",srcDose:"15 mg / 24h",via:"oral",alts:[{name:"Risperidona ²",dose:"6 mg / 24h",via:"oral"}]},
+    ]},
+  {id:"brotizolam",names:["brotizolam"],atc:"N05BA",grupo:"Ansiolíticos – Benzodiazepinas",fecha:GFT_DATE,entries:[{srcDrug:"Brotizolam",srcDose:"0,25 mg / 24h",via:"oral",alts:[{name:"Lormetazepam",dose:"1 mg / 24h",via:"oral"}]}]},
+  {id:"loprazolam",names:["loprazolam"],atc:"N05BA",grupo:"Ansiolíticos – Benzodiazepinas",fecha:GFT_DATE,entries:[{srcDrug:"Loprazolam",srcDose:"1 mg / 24h",via:"oral",alts:[{name:"Lormetazepam",dose:"1 mg / 24h",via:"oral"}]}]},
+  {id:"quazepam",names:["quazepam"],atc:"N05BA",grupo:"Ansiolíticos – Benzodiazepinas",fecha:GFT_DATE,entries:[{srcDrug:"Quazepam",srcDose:"15 mg / 24h",via:"oral",alts:[{name:"Lormetazepam",dose:"1 mg / 24h",via:"oral"}]}]},
+  {id:"triazolam",names:["triazolam","halcion"],atc:"N05BA",grupo:"Ansiolíticos – Benzodiazepinas",fecha:GFT_DATE,entries:[{srcDrug:"Triazolam",srcDose:"0,125 mg / 24h",via:"oral",alts:[{name:"Zolpidem",dose:"10 mg / 24h",via:"oral"}]}]},
+  {id:"zopiclona",names:["zopiclona","limovan","datolan"],atc:"N05CF",grupo:"Hipnóticos – Ciclopirrolona",fecha:GFT_DATE,entries:[{srcDrug:"Zopiclona",srcDose:"7,5 mg / 24h",via:"oral",alts:[{name:"Zolpidem",dose:"10 mg / 24h",via:"oral"}]}]},
+  {id:"clotiazepam",names:["clotiazepam","trecalmo"],atc:"N05BA",grupo:"Ansiolíticos – Benzodiazepinas",fecha:GFT_DATE,entries:[{srcDrug:"Clotiazepam",srcDose:"5 mg / 12h",via:"oral",alts:[{name:"Lorazepam",dose:"1 mg / 12h",via:"oral"}]}]},
+  {id:"pinazepam",names:["pinazepam","domar"],atc:"N05BA",grupo:"Ansiolíticos – Benzodiazepinas",fecha:GFT_DATE,entries:[{srcDrug:"Pinazepam",srcDose:"5 mg / 12h",via:"oral",alts:[{name:"Diazepam",dose:"5 mg / 12h",via:"oral"}]}]},
+  {id:"clordiazepoxido",names:["clordiazepóxido","clordiazepoxido","librium"],atc:"N05BA",grupo:"Ansiolíticos – Benzodiazepinas",fecha:GFT_DATE,entries:[{srcDrug:"Clordiazepóxido",srcDose:"5 mg / 8h",via:"oral",alts:[{name:"Diazepam",dose:"5 mg / 8h",via:"oral"}]}]},
+  {id:"escitalopram",names:["escitalopram","cipralex","esertia"],atc:"N06AB",grupo:"Antidepresivos – ISRS",fecha:GFT_DATE,
+    notes:"¹ Escitalopram: inicio 5-10 mg/24h; máx 20 mg/24h. En ancianos: reducir dosis inicial y máxima a la mitad. ² Citalopram: máx 40 mg/24h. En IH y ancianos: máx 20 mg/24h.",
+    entries:[{srcDrug:"Escitalopram ¹",srcDose:"10 mg / 24h",via:"oral",alts:[{name:"Citalopram ²",dose:"20 mg / 24h",via:"oral"}]}]},
+
+  // ══ GRUPO R ══
+  {id:"beclometasona_nasal",names:["beclometasona nasal","beconase"],atc:"R01AD",grupo:"Corticoides nasales",fecha:GFT_DATE,entries:[{srcDrug:"Beclometasona",srcDose:"50 mcg/puls · 2 puls/12h cada fosa nasal",via:"nasal",alts:[{name:"Budesonida",dose:"64 mcg/puls · 1 puls/12h cada fosa nasal",via:"nasal"}]}]},
+  {id:"fluticasona_prop_nasal",names:["fluticasona propionato nasal","flixonase"],atc:"R01AD",grupo:"Corticoides nasales",fecha:GFT_DATE,entries:[{srcDrug:"Fluticasona propionato",srcDose:"50 mcg/puls · 2 puls/12h cada fosa nasal",via:"nasal",alts:[{name:"Budesonida",dose:"64 mcg/puls · 1 puls/12h cada fosa nasal",via:"nasal"}]}]},
+  {id:"fluticasona_fur_nasal",names:["fluticasona furoato nasal","avamys"],atc:"R01AD",grupo:"Corticoides nasales",fecha:GFT_DATE,entries:[{srcDrug:"Fluticasona furoato",srcDose:"27,5 mcg/puls · 2 puls/12h cada fosa nasal",via:"nasal",alts:[{name:"Budesonida",dose:"64 mcg/puls · 1 puls/12h cada fosa nasal",via:"nasal"}]}]},
+  {id:"mometasona_nasal",names:["mometasona nasal","nasonex"],atc:"R01AD",grupo:"Corticoides nasales",fecha:GFT_DATE,entries:[{srcDrug:"Mometasona",srcDose:"50 mcg/puls · 1-2 puls/24h cada fosa nasal",via:"nasal",alts:[{name:"Budesonida",dose:"64 mcg/puls · 1 puls/12h cada fosa nasal",via:"nasal"}]}]},
+  {id:"triamcinolona_nasal",names:["triamcinolona nasal","nasacort"],atc:"R01AD",grupo:"Corticoides nasales",fecha:GFT_DATE,entries:[{srcDrug:"Triamcinolona",srcDose:"55 mcg/puls",via:"nasal",alts:[{name:"Budesonida",dose:"64 mcg/puls · 1 puls/12h cada fosa nasal",via:"nasal"}]}]},
+  // Ventolin sol no incluido
+  {id:"ventolin_sol",names:["ventolin solucion","ventolin 5mg/ml","salbutamol 5mg/ml"],atc:"R03AC",grupo:"Broncodilatadores SABA – Nebulización",fecha:GFT_DATE,
+    notes:"Equivalencias: 1 ml Ventolin® sol → 5 ml Salbuair®; 0,5 ml → 2,5 ml Salbuair®; 0,3 ml → 1,5 ml Salbuair®.",
+    entries:[
+      {srcDrug:"Ventolin® solución para inhalación",srcDose:"1 ml (5 mg)",via:"nebulización",alts:[{name:"Salbuair® (Salbutamol 2,5 mg amp)",dose:"5 ml (2,5 mg amp completa)",via:"nebulización"}]},
+      {srcDrug:"Ventolin® solución para inhalación",srcDose:"0,5 ml",via:"nebulización",alts:[{name:"Salbuair® (Salbutamol 2,5 mg amp)",dose:"2,5 ml",via:"nebulización"}]},
+      {srcDrug:"Ventolin® solución para inhalación",srcDose:"0,3 ml",via:"nebulización",alts:[{name:"Salbuair® (Salbutamol 2,5 mg amp)",dose:"1,5 ml",via:"nebulización"}]},
+    ]},
+  {id:"carbocisteina",names:["carbocisteína","carbocisteina","mucofluid","exomuc","carbocisteil"],atc:"R05CB",grupo:"Mucolíticos",fecha:GFT_DATE,entries:[{srcDrug:"Carbocisteína",srcDose:"2,7 g / 24h",via:"oral",alts:[{name:"Acetilcisteína",dose:"600 mg / 24h",via:"oral"}]}]},
+  {id:"ambroxol_oral",names:["ambroxol oral","ambroxol 30mg"],atc:"R05CB",grupo:"Mucolíticos",fecha:GFT_DATE,entries:[{srcDrug:"Ambroxol",srcDose:"30 mg / 8h",via:"oral",alts:[{name:"Acetilcisteína",dose:"600 mg / 24h",via:"oral"}]}]},
+  {id:"cetirizina",names:["cetirizina","zyrtec","alerlisin"],atc:"R06AX",grupo:"Antihistamínicos sistémicos",fecha:GFT_DATE,entries:[{srcDrug:"Cetirizina",srcDose:"10 mg / 24h",via:"oral",alts:[{name:"Ebastina",dose:"10 mg / 24h",via:"oral"}]}]},
+  {id:"desloratadina",names:["desloratadina","aerius"],atc:"R06AX",grupo:"Antihistamínicos sistémicos",fecha:GFT_DATE,entries:[{srcDrug:"Desloratadina",srcDose:"5 mg / 24h",via:"oral",alts:[{name:"Ebastina",dose:"10 mg / 24h",via:"oral"}]}]},
+  {id:"fexofenadina",names:["fexofenadina","telfast"],atc:"R06AX",grupo:"Antihistamínicos sistémicos",fecha:GFT_DATE,entries:[{srcDrug:"Fexofenadina",srcDose:"120-180 mg / 24h",via:"oral",alts:[{name:"Ebastina",dose:"10 mg / 24h",via:"oral"}]}]},
+  {id:"ketotifeno",names:["ketotifeno","zaditen"],atc:"R06AX",grupo:"Antihistamínicos sistémicos",fecha:GFT_DATE,entries:[{srcDrug:"Ketotifeno",srcDose:"1 mg / 24h",via:"oral",alts:[{name:"Ebastina",dose:"10 mg / 24h",via:"oral"}]}]},
+  {id:"levocetirizina",names:["levocetirizina","xazal"],atc:"R06AX",grupo:"Antihistamínicos sistémicos",fecha:GFT_DATE,entries:[{srcDrug:"Levocetirizina",srcDose:"5 mg / 24h",via:"oral",alts:[{name:"Ebastina",dose:"10 mg / 24h",via:"oral"}]}]},
+  {id:"loratadina",names:["loratadina","clarityne"],atc:"R06AX",grupo:"Antihistamínicos sistémicos",fecha:GFT_DATE,entries:[{srcDrug:"Loratadina",srcDose:"10 mg / 24h",via:"oral",alts:[{name:"Ebastina",dose:"10 mg / 24h",via:"oral"}]}]},
+  {id:"mizolastina",names:["mizolastina","zolistan"],atc:"R06AX",grupo:"Antihistamínicos sistémicos",fecha:GFT_DATE,entries:[{srcDrug:"Mizolastina",srcDose:"10 mg / 24h",via:"oral",alts:[{name:"Ebastina",dose:"10 mg / 24h",via:"oral"}]}]},
+  {id:"rupatadina",names:["rupatadina","rupafin"],atc:"R06AX",grupo:"Antihistamínicos sistémicos",fecha:GFT_DATE,entries:[{srcDrug:"Rupatadina",srcDose:"10 mg / 24h",via:"oral",alts:[{name:"Ebastina",dose:"10 mg / 24h",via:"oral"}]}]},
+  {id:"terfenadina",names:["terfenadina"],atc:"R06AX",grupo:"Antihistamínicos sistémicos",fecha:GFT_DATE,entries:[{srcDrug:"Terfenadina",srcDose:"60 mg / 24h",via:"oral",alts:[{name:"Ebastina",dose:"10 mg / 24h",via:"oral"}]}]},
+
+  // ══ GRUPO S ══
+  {id:"norfloxacino_oft",names:["norfloxacino oftálmico"],atc:"S01AA",grupo:"Oftalmológicos – Antibióticos",fecha:GFT_DATE,entries:[{srcDrug:"Norfloxacino",srcDose:"1-2 gotas / 4-6h",via:"oftálmica",alts:[{name:"Ciprofloxacino",dose:"0,3% colirio",via:"oftálmica"}]}]},
+  {id:"ofloxacino_oft",names:["ofloxacino oftálmico"],atc:"S01AA",grupo:"Oftalmológicos – Antibióticos",fecha:GFT_DATE,entries:[{srcDrug:"Ofloxacino",srcDose:"0,3% colirio · 1-2 gotas/4-6h",via:"oftálmica",alts:[{name:"Ciprofloxacino",dose:"0,3% colirio",via:"oftálmica"}]}]},
+  {id:"gentamicina_oft",names:["gentamicina oftálmica"],atc:"S01AA",grupo:"Oftalmológicos – Antibióticos",fecha:GFT_DATE,entries:[{srcDrug:"Gentamicina",srcDose:"1-2 gotas / 4-6h",via:"oftálmica",alts:[{name:"Tobramicina",dose:"0,3% colirio",via:"oftálmica"}]}]},
+  {id:"prednisolona_oft",names:["prednisolona oftálmica"],atc:"S01AB",grupo:"Oftalmológicos – Corticoides",fecha:GFT_DATE,entries:[{srcDrug:"Prednisolona",srcDose:"colirio habitual",via:"oftálmica",alts:[{name:"Dexametasona",dose:"ajustar posología",via:"oftálmica"}]}]},
+  {id:"tetrizolina_dex",names:["tetrizolina dexametasona","tetrizolina+dexametasona"],atc:"S01AB",grupo:"Oftalmológicos – Corticoides combinados",fecha:GFT_DATE,entries:[{srcDrug:"Tetrizolina + Dexametasona",srcDose:"dosis habitual",via:"oftálmica",alts:[{name:"Dexametasona",dose:"ajustar posología",via:"oftálmica"}]}]},
+  {id:"ketorolaco_oft",names:["ketorolaco oftálmico"],atc:"S01BC",grupo:"Oftalmológicos – AINEs",fecha:GFT_DATE,entries:[{srcDrug:"Ketorolaco",srcDose:"1 gota habitual",via:"oftálmica",alts:[{name:"Diclofenaco",dose:"0,1% colirio",via:"oftálmica"}]}]},
+  {id:"nepafenaco_oft",names:["nepafenaco oftálmico","nevanac"],atc:"S01BC",grupo:"Oftalmológicos – AINEs",fecha:GFT_DATE,entries:[{srcDrug:"Nepafenaco",srcDose:"1 gota / 8h",via:"oftálmica",alts:[{name:"Diclofenaco",dose:"0,1% colirio",via:"oftálmica"}]}]},
+  {id:"bromfenaco_oft",names:["bromfenaco oftálmico"],atc:"S01BC",grupo:"Oftalmológicos – AINEs",fecha:GFT_DATE,entries:[{srcDrug:"Bromfenaco",srcDose:"1 gota / 12-24h",via:"oftálmica",alts:[{name:"Diclofenaco",dose:"0,1% colirio",via:"oftálmica"}]}]},
+  {id:"dex_neo_oft",names:["dexametasona neomicina oftálmica","dexametasona gentamicina oftálmica","dexagenta"],atc:"S01CA",grupo:"Oftalmológicos – Corticoide + antibiótico",fecha:GFT_DATE,
+    notes:"También incluido en GFT: Dexametasona + Neomicina + Polimixina B (Maxitrol®).",
+    entries:[{srcDrug:"Dexametasona + Neomicina (ó Gentamicina)",srcDose:"dosis habitual",via:"oftálmica",alts:[{name:"Dexametasona + Tobramicina",dose:"ajustar posología",via:"oftálmica"}]}]},
+  {id:"apraclonidina",names:["apraclonidina","iopidine"],atc:"S01EA",grupo:"Antiglaucoma – Simpaticomiméticos",fecha:GFT_DATE,entries:[{srcDrug:"Apraclonidina",srcDose:"1-2 gotas habitual",via:"oftálmica",alts:[{name:"Brimonidina",dose:"ajustar posología",via:"oftálmica"}]}]},
+  {id:"brinzolamida",names:["brinzolamida","azopt"],atc:"S01EC",grupo:"Antiglaucoma – Inhibidores anhidrasa carbónica",fecha:GFT_DATE,entries:[{srcDrug:"Brinzolamida",srcDose:"1 gota / 12h",via:"oftálmica",alts:[{name:"Dorzolamida",dose:"1 gota / 8h",via:"oftálmica"}]}]},
+  {id:"carteolol_oft",names:["carteolol oftálmico"],atc:"S01ED",grupo:"Antiglaucoma – Betabloqueantes",fecha:GFT_DATE,entries:[{srcDrug:"Carteolol",srcDose:"1-2 gotas/12h (2%)",via:"oftálmica",alts:[{name:"Timolol",dose:"0,5% colirio",via:"oftálmica"}]}]},
+  {id:"betaxolol_oft",names:["betaxolol oftálmico","betoptic"],atc:"S01ED",grupo:"Antiglaucoma – Betabloqueantes",fecha:GFT_DATE,
+    notes:"* Timolol 0,5% NO disponible en GFT. Contactar con el Servicio de Farmacia.",
+    entries:[{srcDrug:"Betaxolol",srcDose:"1-2 gotas/12h (0,25%)",via:"oftálmica",alts:[{name:"Timolol * (contactar Farmacia)",dose:"0,5% colirio",via:"oftálmica"}]}]},
+  {id:"levobunolol",names:["levobunolol","betagan"],atc:"S01ED",grupo:"Antiglaucoma – Betabloqueantes",fecha:GFT_DATE,entries:[{srcDrug:"Levobunolol",srcDose:"1-2 gotas/12h (0,5%)",via:"oftálmica",alts:[{name:"Timolol",dose:"0,5% colirio",via:"oftálmica"}]}]},
+  {id:"bimatoprost",names:["bimatoprost","lumigan"],atc:"S01EE",grupo:"Antiglaucoma – Análogos prostaglandinas",fecha:GFT_DATE,entries:[{srcDrug:"Bimatoprost (Lumigan®)",srcDose:"1 gota / 24h (0,03%)",via:"oftálmica",alts:[{name:"Latanoprost (Xalatan®)",dose:"1 gota / 24h",via:"oftálmica"},{name:"Tafluprost (Saflutan®)",dose:"1 gota / 24h",via:"oftálmica"}]}]},
+  {id:"travoprost",names:["travoprost","travatan"],atc:"S01EE",grupo:"Antiglaucoma – Análogos prostaglandinas",fecha:GFT_DATE,entries:[{srcDrug:"Travoprost (Travatan®)",srcDose:"1 gota / 24h (0,004%)",via:"oftálmica",alts:[{name:"Latanoprost (Xalatan®)",dose:"1 gota / 24h",via:"oftálmica"},{name:"Tafluprost (Saflutan®)",dose:"1 gota / 24h",via:"oftálmica"}]}]},
+];
+
+// ═══════════════════════════════════════════════════════
+// ENTRADAS PERSONALIZADAS
+// ═══════════════════════════════════════════════════════
+let customEntries = [];
+try { customEntries = JSON.parse(localStorage.getItem('cEntries_v3') || '[]'); } catch(e){}
+
+// ═══════════════════════════════════════════════════════
+// NORMALIZACIÓN (quita tildes y pasa a minúsculas)
+// ═══════════════════════════════════════════════════════
+function norm(s){
+  return String(s).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
+// ═══════════════════════════════════════════════════════
+// AUTOCOMPLETE
+// ═══════════════════════════════════════════════════════
+const inp = document.getElementById('drugInput');
+const acl = document.getElementById('acList');
+let acIdx = -1;
+
+function allSearchable(){
+  const res = [];
+  // DB entries
+  DB.forEach(d => d.names.forEach(n => {
+    res.push({label:n, normLabel:norm(n), drug:d, type:'db'});
+  }));
+  // GFT included
+  GFT_INCLUDED.forEach(g => g.names.forEach(n => {
+    res.push({label:n, normLabel:norm(n), gft:g, type:'gft'});
+  }));
+  // Custom
+  customEntries.forEach(c => {
+    res.push({label:c.drug, normLabel:norm(c.drug), custom:c, type:'custom'});
+  });
+  return res;
+}
+
+inp.addEventListener('input', ()=>{
+  const q = norm(inp.value.trim());
+  acl.innerHTML=''; acIdx=-1;
+  if(q.length<2){acl.classList.remove('open');return;}
+  const seen=new Set(), hits=[];
+  allSearchable().forEach(item=>{
+    if(item.normLabel.includes(q) && !seen.has(item.normLabel)){
+      seen.add(item.normLabel); hits.push(item);
+    }
+  });
+  if(!hits.length){acl.classList.remove('open');return;}
+  // Sort: exact first, then starts-with, then includes
+  hits.sort((a,b)=>{
+    const ae=a.normLabel===q, be=b.normLabel===q;
+    if(ae&&!be)return -1; if(be&&!ae)return 1;
+    const as=a.normLabel.startsWith(q), bs=b.normLabel.startsWith(q);
+    if(as&&!bs)return -1; if(bs&&!as)return 1;
+    return a.label.localeCompare(b.label,'es');
+  });
+  hits.slice(0,14).forEach(item=>{
+    const div=document.createElement('div');
+    div.className='ac-item';
+    const hi=item.label.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),'<mark>$1</mark>');
+    let tag='', tagClass='ac-tag-db';
+    if(item.type==='gft'){tag='✓ en GFT';tagClass='ac-tag-gft';}
+    else if(item.type==='custom'){tag='✏ manual';tagClass='ac-tag-custom';}
+    else{tag=item.drug?.atc||'';}
+    div.innerHTML=`<span class="ac-name">${hi}</span><span class="ac-tag ${tagClass}">${tag}</span>`;
+    div.addEventListener('click',()=>{inp.value=item.label;acl.classList.remove('open');doSearch();});
+    acl.appendChild(div);
+  });
+  acl.classList.add('open');
+});
+inp.addEventListener('keydown',e=>{
+  const its=acl.querySelectorAll('.ac-item');
+  if(e.key==='ArrowDown'){acIdx=Math.min(acIdx+1,its.length-1);its.forEach((it,i)=>it.classList.toggle('act',i===acIdx));}
+  else if(e.key==='ArrowUp'){acIdx=Math.max(acIdx-1,0);its.forEach((it,i)=>it.classList.toggle('act',i===acIdx));}
+  else if(e.key==='Enter'){if(acIdx>=0&&its[acIdx]){its[acIdx].click();}else doSearch();}
+  else if(e.key==='Escape')acl.classList.remove('open');
+});
+document.addEventListener('click',e=>{if(!e.target.closest('#drugInput')&&!e.target.closest('#acList'))acl.classList.remove('open');});
+
+// ═══════════════════════════════════════════════════════
+// BÚSQUEDA PRINCIPAL
+// ═══════════════════════════════════════════════════════
+function doSearch(){
+  acl.classList.remove('open');
+  const raw=inp.value.trim();
+  const q=norm(raw);
+  if(!q){showToast('Introduce el nombre del medicamento');return;}
+  const res=document.getElementById('results');
+  res.style.animation='none';
+  setTimeout(()=>{res.style.animation='';},10);
+
+  // Buscar en DB (todos los que incluyan el query)
+  const dbHits = DB.filter(d=>d.names.some(n=>norm(n).includes(q)));
+  // Buscar en GFT (todos los que incluyan el query)
+  const gftHits = GFT_INCLUDED.filter(g=>g.names.some(n=>norm(n).includes(q)));
+  // Buscar custom
+  const custHits = customEntries.filter(c=>norm(c.drug).includes(q));
+
+  if(!dbHits.length && !gftHits.length && !custHits.length){
+    res.innerHTML=`<div class="not-found">
+      <div class="nfi">🔍</div>
+      <h3>Medicamento no encontrado</h3>
+      <p>«<strong>${esc(raw)}</strong>» no figura en esta guía de intercambio terapéutico.<br>Puede que no requiera intercambio, que no tenga equivalencia establecida, o que no esté registrado.</p>
+    </div>`; return;
+  }
+
+  let html='';
+  // GFT incluidos primero
+  gftHits.forEach(g=>{ html+=renderGFT(g); });
+  // DB intercambios
+  dbHits.forEach(d=>{ html+=renderCard(d); });
+  // Custom
+  custHits.forEach(c=>{ html+=renderCustomCard(c); });
+  res.innerHTML=html;
+}
+
+function renderGFT(g){
+  const pills=g.presentaciones.map(p=>`<span class="gft-pill">${esc(p)}</span>`).join('');
+  return `<div class="gft-card">
+    <div class="gft-card-head">
+      <div class="gft-icon">✅</div>
+      <div>
+        <div class="gft-title">${esc(g.names[0])}</div>
+        <div class="gft-desc"><strong>Incluido en la Guía Farmacoterapéutica (GFT)</strong> · ${esc(g.grupo)}</div>
+        <div class="gft-pres">
+          <div class="gft-pres-label">Presentaciones disponibles en Farmacia</div>
+          <div class="gft-pres-list">${pills}</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderCard(d){
+  let h=`<div class="rcard">`;
+  h+=`<div class="rcard-head">
+    <div class="rcard-atc">${esc(d.atc)} · ${esc(d.grupo)}</div>
+    <div class="rcard-drug">${esc(d.names[0])}</div>
+    ${d.names.length>1?`<div class="rcard-aliases">también: ${d.names.slice(1).map(n=>esc(n)).join(', ')}</div>`:''}
+  </div>`;
+  if(d.noDirecta){
+    h+=`<div class="no-direct">⚠️&nbsp; <strong>Grupo NO susceptible de sustitución directa</strong> por Farmacia. Las equivalencias son orientativas y requieren validación clínica.</div>`;
+  }
+  h+=buildTable(d);
+  if(d.notes){
+    h+=`<div class="notes-section"><span class="ni">ℹ️</span><span>${esc(d.notes)}</span></div>`;
+  }
+  h+=`</div>`;
+  return h;
+}
+
+function buildTable(d){
+  let h=`<table class="exchange-table">
+    <thead><tr>
+      <th style="width:44%">Medicamento NO incluido en GFT</th>
+      <th class="th-arrow" style="width:36px"></th>
+      <th class="th-alt">Alternativa incluida en GFT</th>
+    </tr></thead><tbody>`;
+  d.entries.forEach(entry=>{
+    h+=`<tr>`;
+    // col izq
+    h+=`<td>`;
+    if(entry.indicacion)h+=`<div class="ind-badge">${esc(entry.indicacion)}</div>`;
+    h+=`<div class="src-drug">${esc(entry.srcDrug||d.names[0])}</div>`;
+    if(entry.srcDose)h+=`<div class="src-dose">${esc(entry.srcDose)}</div>`;
+    if(entry.via)h+=`<span class="via-pill">${esc(entry.via)}</span>`;
+    h+=`</td>`;
+    // flecha
+    h+=`<td class="arrow-col">→</td>`;
+    // col der
+    h+=`<td>`;
+    if(entry.alts&&entry.alts.length){
+      entry.alts.forEach((alt,i)=>{
+        if(i>0)h+=`<div class="multi-alt">`;
+        h+=`<div class="alt-drug">${esc(alt.name)}</div>`;
+        if(alt.dose)h+=`<div class="alt-dose">${esc(alt.dose)}</div>`;
+        if(alt.via)h+=`<span class="alt-via">${esc(alt.via)}</span>`;
+        if(alt.note)h+=`<div class="alt-note">${esc(alt.note)}</div>`;
+        if(i>0)h+=`</div>`;
+      });
+    }
+    h+=`</td></tr>`;
+  });
+  h+=`</tbody></table>`;
+  return h;
+}
+
+function renderCustomCard(c){
+  return `<div class="rcard">
+    <div class="rcard-head" style="background:#4a3d2a">
+      <div class="rcard-atc">Entrada manual · ${esc(c.atc||'—')} · Añadida: ${esc(c.fecha)}</div>
+      <div class="rcard-drug">${esc(c.drug)}</div>
+    </div>
+    <table class="exchange-table"><thead><tr>
+      <th>Medicamento / Dosis de origen</th><th class="th-arrow"></th><th class="th-alt">Alternativa en GFT</th>
+    </tr></thead><tbody><tr>
+      <td><div class="src-dose">${esc(c.doseSrc||'—')}</div></td>
+      <td class="arrow-col">→</td>
+      <td><div class="alt-drug">${esc(c.alt)}</div></td>
+    </tr></tbody></table>
+    ${c.obs?`<div class="notes-section"><span class="ni">ℹ️</span><span>${esc(c.obs)}</span></div>`:''}
+  </div>`;
+}
+
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
+
+// ═══════════════════════════════════════════════════════
+// GESTIÓN BD
+// ═══════════════════════════════════════════════════════
+function toggleMgmt(){
+  const b=document.getElementById('mgmtBody');
+  const c=document.getElementById('mgmtChev');
+  b.classList.toggle('open');
+  c.textContent=b.classList.contains('open')?'▲':'▼';
+  if(b.classList.contains('open'))renderCE();
+}
+function today(){const d=new Date();return`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;}
+function addEntry(){
+  const drug=document.getElementById('nDrug').value.trim();
+  const atc=document.getElementById('nAtc').value.trim();
+  const doseSrc=document.getElementById('nDoseSrc').value.trim();
+  const alt=document.getElementById('nAlt').value.trim();
+  const obs=document.getElementById('nObs').value.trim();
+  if(!drug||!alt){showToast('Introduce el medicamento y la alternativa');return;}
+  const e={id:Date.now(),drug,atc,doseSrc,alt,obs,fecha:today()};
+  customEntries.push(e);
+  saveCustom();
+  ['nDrug','nAtc','nDoseSrc','nAlt','nObs'].forEach(i=>document.getElementById(i).value='');
+  renderCE();
+  showToast('✓ Entrada añadida');
+}
+function delEntry(id){customEntries=customEntries.filter(e=>e.id!==id);saveCustom();renderCE();showToast('Entrada eliminada');}
+function clearAll(){if(!confirm('¿Eliminar todas las entradas manuales?'))return;customEntries=[];saveCustom();renderCE();showToast('Entradas eliminadas');}
+function saveCustom(){try{localStorage.setItem('cEntries_v3',JSON.stringify(customEntries));}catch(e){}}
+function renderCE(){
+  const el=document.getElementById('ceList');
+  if(!customEntries.length){el.innerHTML='<p style="font-size:.8rem;color:var(--text3)">Sin entradas añadidas.</p>';return;}
+  el.innerHTML=customEntries.map(e=>`
+    <div class="ce-row">
+      <div class="ce-name">${esc(e.drug)}</div>
+      <div class="ce-alt">→ ${esc(e.alt)}</div>
+      <div class="ce-date">${esc(e.fecha)}</div>
+      <button class="ce-del" onclick="delEntry(${e.id})">✕</button>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// EXPORTAR HTML
+// ═══════════════════════════════════════════════════════
+function exportHTML(){
+  const src=document.documentElement.outerHTML;
+  const marker=`let customEntries = [];\n  try { customEntries = JSON.parse(localStorage.getItem('cEntries_v3') || '[]'); } catch(e){}`;
+  const replacement=`let customEntries = ${JSON.stringify(customEntries)};\n  try { localStorage.setItem('cEntries_v3', JSON.stringify(customEntries)); } catch(e){}`;
+  download(src.replace(marker,replacement),'intercambio_terapeutico.html','text/html');
+  showToast('✓ HTML exportado');
+}
+
+// ═══════════════════════════════════════════════════════
+// EXPORTAR CSV
+// ═══════════════════════════════════════════════════════
+function exportCSV(){
+  const rows=[['Medicamento NO en GFT','ATC','Grupo','Dosis origen','Vía origen','Indicación','Alternativa GFT','Dosis alternativa','Vía alternativa','Notas/excepciones','Fecha','Tipo']];
+  DB.forEach(d=>{
+    d.entries.forEach(entry=>{
+      (entry.alts||[]).forEach(alt=>{
+        rows.push([d.names[0],d.atc,d.grupo,entry.srcDose||'',entry.via||'',entry.indicacion||'',alt.name,alt.dose||'',alt.via||'',d.notes||'',d.fecha,'Guía oficial']);
+      });
+    });
+  });
+  customEntries.forEach(c=>{rows.push([c.drug,c.atc||'','Entrada manual',c.doseSrc||'','','',c.alt,'','',c.obs||'',c.fecha,'Manual']);});
+  const csv=rows.map(r=>r.map(cell=>`"${String(cell).replace(/"/g,'""')}"`).join(',')).join('\n');
+  download('\uFEFF'+csv,'intercambio_terapeutico.csv','text/csv');
+  showToast('✓ CSV exportado (abrir con Excel)');
+}
+
+function download(content,filename,mime){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download=filename; a.click(); URL.revokeObjectURL(a.href);
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+renderCE();
+</script>
+</body>
+</html>
