@@ -63,7 +63,8 @@ main{max-width:860px;margin:0 auto;padding:2rem 1.5rem 5rem}
 .rcard-drug{font-family:'DM Serif Display',serif;font-size:1.5rem;letter-spacing:-.02em}
 .rcard-aliases{font-size:.78rem;opacity:.6;margin-top:.2rem;font-style:italic}
 .no-direct{background:#7a3b1e;color:#fde8dc;padding:.75rem 1.6rem;font-size:.82rem;font-weight:500;display:flex;align-items:center;gap:8px}
-.exchange-table{width:100%;border-collapse:collapse}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.exchange-table{width:100%;border-collapse:collapse;min-width:480px}
 .exchange-table thead tr{background:var(--surface2)}
 .exchange-table th{padding:9px 1.1rem;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);border-bottom:2px solid var(--border);text-align:left}
 .exchange-table th.th-alt{color:var(--teal);background:var(--teal-light)}
@@ -1190,7 +1191,7 @@ function renderCard(d){
 }
 
 function buildTable(d){
-  let h=`<table class="exchange-table">
+  let h=`<div class="table-scroll"><table class="exchange-table">
     <thead><tr>
       <th style="width:44%">Medicamento NO incluido en GFT</th>
       <th class="th-arrow" style="width:36px"></th>
@@ -1221,7 +1222,7 @@ function buildTable(d){
     }
     h+=`</td></tr>`;
   });
-  h+=`</tbody></table>`;
+  h+=`</tbody></table></div>`;
   return h;
 }
 
